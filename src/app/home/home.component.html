@@ -1,0 +1,62 @@
+<div class="homePage">
+    <app-header></app-header>
+    <br><br><br><br>
+    <app-advertisemen-display-bar></app-advertisemen-display-bar>
+    <br>
+    <div class="container">
+        <h1 class="page-title">Rent Premium Fashion</h1>
+        <p class="page-subtitle">Wear your dream outfit without the commitment</p>
+        
+        <div class="products-grid">
+            <div class="product-card" *ngFor="let product of products" [routerLink]="['/product', product._id]">
+                <div class="product-badge" *ngIf="product.isFeatured">Featured</div>
+                <div class="product-badge discount" *ngIf="product.discount">{{product.discount}}% OFF</div>
+                
+                <div class="product-image-container">
+                    <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+                    <div class="quick-view-overlay">
+                        <div class="quick-view-content">
+                            <h4>Quick View</h4>
+                            <div class="quick-details">
+                                <p><strong>Brand:</strong> {{product.brand.name}}</p>
+                                <p><strong>Category:</strong> {{product.category}}</p>
+                                <p><strong>Sizes:</strong> {{product.sizes.join(', ')}}</p>
+                                <p><strong>Colors:</strong> {{product.colors.join(', ')}}</p>
+                                <p><strong>Rental Options:</strong> {{product.rentalPeriods.join(', ')}}</p>
+                            </div>
+                            <button class="quick-view-button" (click)="$event.stopPropagation()" (click)="addToCart(product._id)">
+                                <i class="fas fa-heart"></i>
+                                Add to cart
+                            </button>
+                            <button class="quick-rent-button" (click)="$event.stopPropagation()" [routerLink]="['/product', product._id]" >Rent Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-details">
+                    <h3 class="product-name">{{product.name}}</h3>
+                    <div class="product-brand">{{product.brand.name}}</div>
+                    
+                    <div class="price-container">
+                        <div class="rental-price">${{product.rentalPrice}} <span class="rental-period">/week</span></div>
+                        <div class="original-price">Retail: ${{product.price}}</div>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <div class="rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">{{product.rating}}</span>
+                            <span class="review-count">({{product.reviewCount}})</span>
+                        </div>
+                        <div class="availability" [class.in-stock]="product.isAvailable" [class.out-of-stock]="!product.isAvailable">
+                            {{product.isAvailable ? 'Available' : 'Booked'}}
+                        </div>
+                    </div>
+                    
+                    <button class="rent-button" (click)="$event.stopPropagation()" [routerLink]="['/product', product._id]" >Rent Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-userfooter></app-userfooter>
+</div>

@@ -1,0 +1,104 @@
+
+<app-header></app-header>
+<br><br><br><br><br>
+<div class="orders-container">
+    <div class="orders-header">
+      <h1>Order History</h1>
+      <p class="subtitle">Review your past and current rentals</p>
+    </div>
+  
+    <div class="orders-list">
+      <div *ngIf="orders.length === 0" class="no-orders">
+        <div class="empty-state">
+          <i class="fas fa-box-open"></i>
+          <h2>No Orders Yet</h2>
+          <p>Your rental history will appear here</p>
+          <a routerLink="/" class="btn btn-primary">Browse Collection</a>
+        </div>
+      </div>
+  
+      <div *ngFor="let order of orders; trackBy: trackByOrderId" class="order-card">
+        <div class="order-card-header">
+          <div class="order-meta">
+            <span class="order-number">ORDER #{{order.orderId}}</span>
+            <span class="order-date">{{order.orderDate | date:'MMMM d, y'}}</span>
+          </div>
+          <div class="order-status-container">
+            <span class="status-badge {{getStatusClass(order.status)}}">
+              {{order.status}}
+            </span>
+            <span *ngIf="order.estimatedDelivery" class="delivery-info">
+              <i class="fas fa-truck"></i>
+              {{getDeliveryText(order)}}
+            </span>
+          </div>
+        </div>
+  
+        <div class="order-card-body">
+          <div class="order-items">
+            <div *ngFor="let item of order.items" class="order-item">
+              <div class="item-image-container">
+                <img [src]="item.imageUrl" [alt]="item.name" class="item-image">
+              </div>
+              <div class="item-details">
+                <h3 class="item-name">{{item.name}}</h3>
+                <div class="item-specs">
+                  <span *ngIf="item.size" class="spec"><i class="fas fa-ruler"></i> {{item.size}}</span>
+                  <span *ngIf="item.color" class="spec"><i class="fas fa-palette"></i> {{item.color}}</span>
+                </div>
+                <div class="item-pricing">
+                  <span class="rental-period">{{item.rentalPeriod}} rental</span>
+                  <span class="price">${{item.rentalPrice | number:'1.2-2'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="order-summary">
+            <div class="summary-section">
+              <h4>Order Summary</h4>
+              <div class="summary-row">
+                <span>Subtotal</span>
+                <span class="amount">${{order.subtotal | number:'1.2-2'}}</span>
+              </div>
+              <div class="summary-row">
+                <span>Shipping</span>
+                <span class="amount">${{order.shippingFee | number:'1.2-2'}}</span>
+              </div>
+              <div class="summary-row">
+                <span>Tax</span>
+                <span class="amount">${{order.tax | number:'1.2-2'}}</span>
+              </div>
+              <div class="summary-row total">
+                <span>Total</span>
+                <span class="amount">${{order.total | number:'1.2-2'}}</span>
+              </div>
+            </div>
+  
+            <div class="action-section">
+              <button *ngIf="order.status === 'Shipped'" class="btn btn-outline">
+                <i class="fas fa-shipping-fast"></i> Track
+              </button>
+              <button *ngIf="order.status === 'Delivered'" class="btn btn-primary">
+                <i class="fas fa-redo"></i> Rent Again
+              </button>
+              <button class="btn btn-text" [routerLink]="['/orders', order.orderId]">
+                View Details <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <div class="order-card-footer">
+          <div class="info-section">
+            <h4><i class="fas fa-map-marker-alt"></i> Delivery Address</h4>
+            <p>{{order.deliveryAddress}}</p>
+          </div>
+          <div class="info-section">
+            <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
+            <p>{{order.paymentMethod}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

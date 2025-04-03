@@ -1,0 +1,109 @@
+<app-header></app-header>
+<br><br><br><br><br>
+<div class="contact-container">
+  <div class="contact-header">
+    <h1>Contact Us</h1>
+    <p>Have questions or feedback? We'd love to hear from you!</p>
+  </div>
+
+  <div class="contact-content">
+    <div class="contact-form-container">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+        <div class="form-group">
+          <label for="name">Full Name *</label>
+          <input type="text" id="name" formControlName="name" placeholder="Your name">
+          <div *ngIf="submitted && f['name'].errors" class="error-message">
+            <span *ngIf="f['name'].errors['required']">Name is required</span>
+            <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" formControlName="email" placeholder="your.email@example.com">
+          <div *ngIf="submitted && f['email'].errors" class="error-message">
+            <span *ngIf="f['email'].errors['required']">Email is required</span>
+            <span *ngIf="f['email'].errors['email']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" formControlName="phone" placeholder="(123) 456-7890">
+          <div *ngIf="submitted && f['phone'].errors" class="error-message">
+            <span *ngIf="f['phone'].errors['pattern']">Please enter a valid phone number</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject *</label>
+          <select id="subject" formControlName="subject">
+            <option value="" disabled selected>Select a subject</option>
+            <option value="General Inquiry">General Inquiry</option>
+            <option value="Rental Questions">Rental Questions</option>
+            <option value="Returns & Exchanges">Returns & Exchanges</option>
+            <option value="Technical Support">Technical Support</option>
+            <option value="Feedback">Feedback</option>
+            <option value="Other">Other</option>
+          </select>
+          <div *ngIf="submitted && f['subject'].errors" class="error-message">
+            <span *ngIf="f['subject'].errors['required']">Subject is required</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message *</label>
+          <textarea id="message" formControlName="message" rows="5" placeholder="Your message..."></textarea>
+          <div *ngIf="submitted && f['message'].errors" class="error-message">
+            <span *ngIf="f['message'].errors['required']">Message is required</span>
+            <span *ngIf="f['message'].errors['minlength']">Message must be at least 20 characters</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Send Message</span>
+          <span *ngIf="isLoading">Sending...</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="contact-info">
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h3>Email Us</h3>
+        <p>supportfashionrental.com</p>
+        <p>infofashionrental.com</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3>Call Us</h3>
+        <p>+1 (800) 123-4567</p>
+        <p>Mon-Fri: 9am-6pm EST</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <h3>Visit Us</h3>
+        <p>123 Fashion Avenue</p>
+        <p>New York, NY 10001</p>
+      </div>
+
+      <div class="social-links">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

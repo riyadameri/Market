@@ -1,0 +1,141 @@
+.about-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    direction: rtl;
+    text-align: right;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #333;
+  }
+  
+  .about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        fill: #d4af37; /* Gold color */
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin: 0;
+      }
+    }
+    
+    .slogan {
+      font-size: 1.2rem;
+      color: #7f8c8d;
+      font-style: italic;
+    }
+  }
+  
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  
+  .about-section {
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    h2 {
+      color: #d4af37;
+      border-bottom: 2px solid #d4af37;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    p {
+      line-height: 1.8;
+      font-size: 1.1rem;
+    }
+    
+    ul {
+      list-style-type: none;
+      padding: 0;
+      
+      li {
+        padding: 0.5rem 0;
+        font-size: 1.1rem;
+        
+        &::before {
+          content: "•";
+          color: #d4af37;
+          font-weight: bold;
+          display: inline-block;
+          width: 1em;
+          margin-left: -1em;
+        }
+      }
+    }
+  }
+  
+  .values-section {
+    h2 {
+      text-align: center;
+      color: #d4af37;
+      margin-bottom: 2rem;
+    }
+  }
+  
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    
+    .value-card {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      border-top: 4px solid #d4af37;
+      
+      h3 {
+        color: #2c3e50;
+        margin-top: 0;
+      }
+      
+      p {
+        color: #7f8c8d;
+      }
+    }
+  }
+  
+  .about-footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .about-header {
+      .logo-container {
+        flex-direction: column;
+        
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    }
+    
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }

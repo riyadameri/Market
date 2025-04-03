@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Fashion DZ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #e63946;
+            --primary-dark: #c1121f;
+            --text-color: #333;
+            --text-light: #666;
+            --border-color: #e0e0e0;
+            --bg-color: #f9f9f9;
+            --white: #ffffff;
+            --google-red: #db4437;
+            --facebook-blue: #4267b2;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .auth-header {
+            padding: 1.5rem 2rem;
+            background-color: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 1.25rem;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            fill: var(--primary-color);
+        }
+
+        /* Main Content */
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            width: 100%;
+            max-width: 450px;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        .auth-branding {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(230,57,70,0.1) 0%, rgba(255,255,255,1) 100%);
+        }
+
+        .logo-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .brand-logo-icon {
+            width: 40px;
+            height: 40px;
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .auth-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* Auth Form */
+        .auth-form {
+            padding: 2rem;
+        }
+
+        .social-auth {
+            display: grid;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--white);
+            color: var(--text-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .google-btn {
+            color: var(--google-red);
+            border-color: rgba(219, 68, 55, 0.3);
+        }
+
+        .google-btn:hover {
+            background-color: rgba(219, 68, 55, 0.05);
+        }
+
+        .facebook-btn {
+            color: var(--facebook-blue);
+            border-color: rgba(66, 103, 178, 0.3);
+        }
+
+        .facebook-btn:hover {
+            background-color: rgba(66, 103, 178, 0.05);
+        }
+
+        .divider {
+            position: relative;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+
+        .divider-text {
+            position: relative;
+            display: inline-block;
+            padding: 0 1rem;
+            background-color: var(--white);
+            color: var(--text-light);
+            z-index: 2;
+            font-size: 0.875rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* User Type Selection */
+        .user-type-selection {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .user-type-option {
+            flex: 1;
+        }
+
+        .user-type-radio {
+            display: none;
+        }
+
+        .user-type-label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .user-type-radio:checked + .user-type-label {
+            border-color: var(--primary-color);
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .terms-agreement {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .terms-agreement input {
+            margin-top: 0.25rem;
+        }
+
+        .terms-link {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .auth-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .primary-btn {
+            background-color: var(--primary-color);
+            color: var(--white);
+            margin-top: 1rem;
+        }
+
+        .primary-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .auth-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Verification Page Styles */
+        .verification-container {
+            display: none;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .verification-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .verification-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .verification-subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .verification-code {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .verification-input {
+            width: 3.5rem;
+            height: 3.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .verification-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+        }
+
+        .resend-code {
+            color: var(--text-light);
+            margin-top: 1.5rem;
+        }
+
+        .resend-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .resend-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Page Footer */
+        footer.auth-footer {
+            padding: 1.5rem 2rem;
+            background-color: var(--white);
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Hide elements */
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-branding {
+                padding: 2rem 1.5rem;
+            }
+            
+            .auth-form {
+                padding: 1.5rem;
+            }
+
+            .verification-container {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-header {
+                padding: 1rem;
+            }
+            
+            .auth-container {
+                padding: 1rem;
+            }
+            
+            .user-type-selection {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+
+            .verification-input {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body class="auth-page">
+    <!-- Minimal Header -->
+    <header class="auth-header">
+        <div class="header-content">
+            <a href="/" class="brand-logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z"/>
+                </svg>
+                <span class="logo-text">Fashion DZ</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="auth-card">
+            <!-- Registration Form (Initially visible) -->
+            <div id="registrationSection">
+                <div class="auth-branding">
+                    <div class="logo-wrapper">
+                        <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z" fill="#e63946"/>
+                        </svg>
+                    </div>
+                    <h1 class="auth-title">Create Your Account</h1>
+                    <p class="auth-subtitle">Join Fashion DZ today</p>
+                </div>
+
+                <form class="auth-form" id="registerForm">
+                    <!-- Social Login Options -->
+                    <div class="social-auth">
+                        <button type="button" class="social-btn google-btn">
+                            <i class="fab fa-google"></i> Continue with Google
+                        </button>
+                        <button type="button" class="social-btn facebook-btn">
+                            <i class="fab fa-facebook-f"></i> Continue with Facebook
+                        </button>
+                    </div>
+
+                    <div class="divider">
+                        <span class="divider-text">or</span>
+                    </div>
+
+                    <!-- User Type Selection -->
+                    <div class="form-group">
+                        <label class="form-label">I want to register as:</label>
+                        <div class="user-type-selection">
+                            <div class="user-type-option">
+                                <input type="radio" id="customer" name="user_type" value="customer" class="user-type-radio" checked>
+                                <label for="customer" class="user-type-label">
+                                    <i class="fas fa-user"></i> Customer
+                                </label>
+                            </div>
+                            <div class="user-type-option">
+                                <input type="radio" id="seller" name="user_type" value="seller" class="user-type-radio">
+                                <label for="seller" class="user-type-label">
+                                    <i class="fas fa-store"></i> Seller
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Name Fields -->
+                    <div class="form-group">
+                        <label for="full_name" class="form-label">Full Name</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="full_name" name="full_name" class="form-input" placeholder="Your full name" required>
+                        </div>
+                    </div>
+
+                    <!-- Email/Password Form -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required minlength="8">
+                            <button type="button" class="toggle-password" aria-label="Show password">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-input" placeholder="••••••••" required minlength="8">
+                        </div>
+                    </div>
+
+                    <!-- Terms Agreement -->
+                    <div class="terms-agreement">
+                        <input type="checkbox" id="agree_terms" name="agree_terms" required>
+                        <label for="agree_terms">
+                            I agree to the <a href="/terms" class="terms-link">Terms of Service</a> and 
+                            <a href="/privacy" class="terms-link">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="auth-btn primary-btn">
+                        Create Account
+                    </button>
+
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="/login" class="auth-link">Sign in</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Verification Section (Initially hidden) -->
+            <div id="verificationSection" class="verification-container hidden">
+                <div class="verification-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h2 class="verification-title">Verify Your Email</h2>
+                <p class="verification-subtitle">We've sent a 6-digit code to <span id="userEmail"></span></p>
+                
+                <div class="verification-code">
+                    <input type="text" class="verification-input" maxlength="1" data-index="0" autofocus>
+                    <input type="text" class="verification-input" maxlength="1" data-index="1">
+                    <input type="text" class="verification-input" maxlength="1" data-index="2">
+                    <input type="text" class="verification-input" maxlength="1" data-index="3">
+                    <input type="text" class="verification-input" maxlength="1" data-index="4">
+                    <input type="text" class="verification-input" maxlength="1" data-index="5">
+                </div>
+                
+                <button type="button" class="auth-btn primary-btn" id="verifyBtn" disabled>
+                    Verify Account
+                </button>
+                
+                <p class="resend-code">
+                    Didn't receive a code? <a class="resend-link" id="resendLink">Resend code</a>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Page Footer -->
+    <footer class="auth-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Fashion DZ. All rights reserved.</p>
+            <nav class="footer-links">
+                <a href="/terms">Terms of Service</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/help">Help Center</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        // Registration form submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (!document.getElementById('agree_terms').checked) {
+                alert('You must agree to the terms and conditions');
+                return;
+            }
+            
+            // Get form data
+            const email = document.getElementById('email').value;
+            
+            // Simulate sending verification code (in a real app, this would be an API call)
+            setTimeout(() => {
+                // Hide registration form
+                document.getElementById('registrationSection').classList.add('hidden');
+                
+                // Show verification section with animation
+                const verificationSection = document.getElementById('verificationSection');
+                verificationSection.classList.remove('hidden');
+                verificationSection.classList.add('fade-in');
+                
+                // Display user's email
+                document.getElementById('userEmail').textContent = email;
+                
+                // Focus first verification input
+                document.querySelector('.verification-input').focus();
+            }, 500);
+        });
+
+        // Verification code input handling
+        const verificationInputs = document.querySelectorAll('.verification-input');
+        const verifyBtn = document.getElementById('verifyBtn');
+        
+        verificationInputs.forEach((input, index) => {
+            // Handle input
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                
+                // Auto-focus next input if a digit was entered
+                if (value.length === 1 && index < verificationInputs.length - 1) {
+                    verificationInputs[index + 1].focus();
+                }
+                
+                // Enable verify button if all fields are filled
+                checkVerificationCode();
+            });
+            
+            // Handle backspace
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    verificationInputs[index - 1].focus();
+                }
+            });
+            
+            // Prevent non-numeric input
+            input.addEventListener('keypress', (e) => {
+                if (e.key < '0' || e.key > '9') {
+                    e.preventDefault();
+                }
+            });
+
+            // Handle paste
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text');
+                if (/^\d{6}$/.test(pasteData)) {
+                    // Split the pasted code into the 6 inputs
+                    pasteData.split('').forEach((char, i) => {
+                        if (verificationInputs[i]) {
+                            verificationInputs[i].value = char;
+                        }
+                    });
+                    checkVerificationCode();
+                }
+            });
+        });
+        
+        function checkVerificationCode() {
+            let allFilled = true;
+            let verificationCode = '';
+            
+            verificationInputs.forEach(input => {
+                if (!input.value) allFilled = false;
+                verificationCode += input.value;
+            });
+            
+            verifyBtn.disabled = !allFilled;
+            
+            // In a real app, you would verify the code length is 6
+            return allFilled;
+        }
+        
+        // Verify button click handler
+        verifyBtn.addEventListener('click', () => {
+            if (checkVerificationCode()) {
+                // Collect all verification digits
+                let verificationCode = '';
+                verificationInputs.forEach(input => {
+                    verificationCode += input.value;
+                });
+                
+                // In a real app, you would verify the code with your backend
+                console.log('Verification code submitted:', verificationCode);
+                
+                // Simulate verification (replace with actual API call)
+                setTimeout(() => {
+                    alert('Account verified successfully! Redirecting to dashboard...');
+                    // window.location.href = '/dashboard';
+                }, 500);
+            }
+        });
+        
+        // Resend code handler
+        document.getElementById('resendLink').addEventListener('click', () => {
+            // In a real app, you would call your backend to resend the code
+            console.log('Resending verification code to:', document.getElementById('userEmail').textContent);
+            
+            // Show feedback to user
+            const resendLink = document.getElementById('resendLink');
+            resendLink.textContent = 'Code sent!';
+            resendLink.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                resendLink.textContent = 'Resend code';
+                resendLink.style.pointerEvents = 'auto';
+            }, 3000);
+        });
+
+        // Auto-submit when all fields are filled (like SMS autofill)
+        verificationInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (checkVerificationCode()) {
+                    // Small delay to allow the last digit to be entered
+                    setTimeout(() => {
+                        document.getElementById('verifyBtn').click();
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

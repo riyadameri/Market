@@ -1,0 +1,51 @@
+
+<app-header></app-header>
+<br><br><br><br><br>
+<div class="favorites-container">
+    <div class="favorites-header">
+      <h1>Your Favorites</h1>
+      <p *ngIf="favoriteItems.length > 0">{{favoriteItems.length}} item(s) saved for later</p>
+      <p *ngIf="favoriteItems.length === 0">You haven't saved any items yet</p>
+    </div>
+  
+    <div class="favorites-content">
+      <div class="favorites-items" *ngIf="favoriteItems.length > 0">
+        <div class="favorite-item" *ngFor="let item of favoriteItems">
+          <div class="item-image">
+            <img [src]="item.imageUrl" [alt]="item.name" [routerLink]="['/product', item.productId]">
+            <button class="remove-btn" (click)="removeFromFavorites(item.productId)">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+          
+          <div class="item-details">
+            <h3 [routerLink]="['/product', item.productId]">{{item.name}}</h3>
+            <p class="brand">Brand: {{item.brand}}</p>
+            <p class="category">Category: {{item.category}}</p>
+            
+            <div class="price-info">
+              <p class="rental-price">${{item.rentalPrice | number:'1.2-2'}} <span>per week</span></p>
+              <p class="original-price">Retail: ${{item.originalPrice | number:'1.2-2'}}</p>
+            </div>
+            
+            <div class="item-actions">
+              <button class="rent-btn" 
+                      [disabled]="!item.isAvailable"
+                      (click)="moveToCart(item)">
+                {{item.isAvailable ? 'Rent Now' : 'Not Available'}}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="favorites-empty" *ngIf="favoriteItems.length === 0">
+        <div class="empty-message">
+          <i class="fas fa-heart"></i>
+          <h2>Your favorites list is empty</h2>
+          <p>Save items you love by clicking the heart icon</p>
+          <a routerLink="/" class="btn-shop">Browse Products</a>
+        </div>
+      </div>
+    </div>
+  </div>

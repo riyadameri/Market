@@ -1,0 +1,603 @@
+<header class="site-header">
+    <div class="header-container" >
+        <!-- Logo and Mobile Menu Toggle -->
+        <div class="header-branding">
+            <h1 class="logo">
+                <a routerLink="/home" aria-label="Fashion DZ Home">
+                    <span class="logo-text">Fashion DZ</span>
+                    <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z"/>
+                    </svg>
+                </a>
+            </h1>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation" aria-expanded="false" (click)="toggleMobileMenu()">
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+                <span class="toggle-bar"></span>
+            </button>
+        </div>
+
+        <!-- Main Navigation -->
+        <nav class="primary-navigation" [class.active]="mobileMenuOpen" aria-label="Primary">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a routerLink="/home" class="nav-link" routerLinkActive="active">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a routerLink="/about" class="nav-link" routerLinkActive="active">About</a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/contact-us" class="nav-link" routerLinkActive="active">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a routerLink="/add-product" class="nav-link" routerLinkActive="active">
+                        <span class="nav-link-text">Add Product</span>
+                        <svg class="add-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="header-search">
+            <form role="search" aria-label="Site search">
+                <div class="search-wrapper">
+                    <input type="search" placeholder="Search products..." aria-label="Search products" class="search-input">
+                    <button type="submit" class="search-button" aria-label="Submit search">
+                        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- User Actions -->
+        <div class="user-actions">
+            <nav class="utility-navigation" aria-label="User utilities">
+                <ul class="utility-list">
+                    <li class="utility-item account-dropdown">
+                        <button class="utility-link" aria-label="Account menu" aria-expanded="false">
+                            <svg class="user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            </svg>
+                            <span class="username">John Doe</span>
+                        </button>
+                        <div class="account-menu">
+                            <div class="user-info">
+                                <span class="user-name">John Doe</span>
+                                <span class="user-email">john.doeexample.com</span>
+                            </div>
+                            <a routerLink="/profile">My Profile</a>
+                            <a routerLink="/orders" class="menu-item">My Orders</a>
+                            <a routerLink="/favorites" class="menu-item">Wishlist</a>
+                            <a routerLink="/settings" class="menu-item">Settings</a>
+                            <a routerLink="/logout" class="menu-item">Logout</a>
+                        </div>
+                    </li>
+                    <li class="utility-item">
+                        <a routerLink="/favorites" class="utility-link" aria-label="Wishlist">
+                            <svg class="wishlist-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            <span class="sr-only">Wishlist</span>
+                            <span class="badge">3</span>
+                        </a>
+                    </li>
+                    <li class="utility-item">
+                        <a routerLink="/cart" class="utility-link" aria-label="Shopping cart">
+                            <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                            </svg>
+                            <span class="sr-only">Cart</span>
+                            <span class="badge">5</span>
+                        </a>
+                    </li>
+
+                    <li class="utility-item admin"  *ngIf="isAdmin"  routerLink="/supplier">
+                        <a class="utility-link" aria-label="Inventory Management">
+                            <svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2zm-5 12H9v-2h6v2zm0-3H9V9h6v2zm0-3H9V6h6v2zm4 11H5V8h14v11z"/>
+                            </svg>
+                            
+                            <span class="sr-only" id="inv">Inventory</span>
+                        </a>
+                        Inventory
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar"*ngIf="currentRoute === '/home'" >
+        <div class="filter-container">
+            <div class="filter-group">
+                <button class="filter-button" (click)="toggleStatesFilter()">
+                    <span>Filter by State</span>
+                    <svg class="filter-icon" viewBox="0 0 24 24" [class.rotated]="showStatesFilter">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown" [class.show]="showStatesFilter">
+                    <div class="filter-search">
+                        <input type="text" placeholder="Search states..." [(ngModel)]="stateSearch" (input)="filterStates()">
+                    </div>
+                    <div class="filter-options">
+                        <button *ngFor="let state of filteredStates" (click)="filterByState(state)">
+                            {{ state }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div  class="filter-group"> 
+                <button class="filter-button" (click)="toggleClothingFilter()">
+                    <span>Filter by Category</span>
+                    <svg class="filter-icon" viewBox="0 0 24 24" [class.rotated]="showClothingFilter">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <div class="filter-dropdown" [class.show]="showClothingFilter">
+                    <div class="filter-categories">
+                        <div class="category-section">
+                            <h4>General Clothing</h4>
+                            <div class="category-options">
+                                <button *ngFor="let category of clothingCategories" (click)="filterByCategory(category)">
+                                    {{ category }}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="category-section">
+                            <h4>Algerian Traditional</h4>
+                            <div class="category-options">
+                                <button *ngFor="let type of algerianTraditional" (click)="filterByTraditional(type)">
+                                    {{ type }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="">Sbat</a>
+            <a href="">Triko</a>
+            <a href="">Jebba</a>
+            <a href="">Khimar</a>
+            <a href="">Serwal</a>
+            <a href="">Kostim</a>
+            <a href="">kasket</a>
+            <a href="">nwader</a>
+            <a href="">jaket</a>
+            <a href="">Cosmitique</a>
+            <a href="">></a>
+            <button class="clear-filters" (click)="clearFilters()">
+                Clear All Filters
+            </button>
+        </div>
+    </div>
+</header>
+<style>
+/* Header Styles */
+.site-header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 0.75rem 0;
+    transition: all 0.3s ease;
+}
+
+.header-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+/* Logo/Branding */
+.header-branding {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 1.5rem;
+    transition: color 0.2s ease;
+}
+/* Add Product Icon Styles */
+.add-icon {
+    width: 18px;
+    height: 18px;
+    margin-left: 6px;
+    fill: currentColor;
+    transition: transform 0.2s ease;
+}
+
+.nav-link:hover .add-icon {
+    transform: scale(1.1);
+}
+
+/* Keep the icon aligned with text */
+.nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link-text {
+    margin-right: 4px;
+}
+
+/* Active state for add product */
+.nav-link.active .add-icon {
+    fill: #e63946;
+}
+.logo a:hover {
+    color: #e63946;
+}
+
+.logo-icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+/* Mobile Menu Toggle (hidden on desktop) */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.toggle-bar {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: #1a1a1a;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+/* Primary Navigation */
+.primary-navigation {
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.nav-list {
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #e63946;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #e63946;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 1rem;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 0;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+    color: #e63946;
+}
+
+/* Search Bar */
+.header-search {
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #e63946;
+    box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
+}
+
+.search-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.search-button:hover {
+    color: #e63946;
+}
+
+/* User Actions */
+.user-actions {
+    margin-left: auto;
+}
+
+.utility-navigation {
+    display: flex;
+    align-items: center;
+}
+
+.utility-list {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.utility-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f8f8f8;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.utility-link:hover {
+    background-color: #e63946;
+    color: white;
+}
+
+.user-icon,
+.wishlist-icon,
+.cart-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: #e63946;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Account Dropdown */
+.account-dropdown {
+    position: relative;
+}
+
+.account-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 1rem;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.account-dropdown:hover .account-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* User info in dropdown */
+.user-info {
+    padding: 0.5rem 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.user-name {
+    display: block;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.user-email {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.menu-item {
+    display: block;
+    padding: 0.5rem 0;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.menu-item:hover {
+    color: #e63946;
+}
+
+/* Username next to user icon */
+.username {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .header-container {
+        padding: 0 1.5rem;
+    }
+    
+    .primary-navigation {
+        order: 3;
+        flex: 0 0 100%;
+        margin: 1rem 0 0;
+        display: none;
+    }
+    
+    .primary-navigation.active {
+        display: block;
+    }
+    
+    .nav-list {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .header-search {
+        order: 2;
+        flex: 1;
+        max-width: none;
+        margin-left: auto;
+    }
+    
+    .user-actions {
+        order: 1;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        padding: 0 1rem;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    .username {
+        display: none;
+    }
+    
+    /* Adjust account menu for mobile */
+    .account-menu {
+        right: auto;
+        left: 0;
+    }
+}
+
+a {
+    cursor: pointer;
+}
+</style>

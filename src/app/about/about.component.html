@@ -1,0 +1,66 @@
+<app-header></app-header>
+<br><br><br><br><br>
+<div class="about-page">
+    <header class="about-header">
+      <div class="logo-container">
+        <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z"/>
+        </svg>
+        <h1>{{companyName}}</h1>
+      </div>
+      <p class="slogan">{{slogan}}</p>
+    </header>
+  
+    <main class="about-content">
+      <section class="about-section">
+        <h2>من نحن</h2>
+        <p>
+          نحن {{companyName}}، رواد في مجال تأجير الأزياء في الجزائر منذ عام {{foundingYear}}. نقدم مجموعة واسعة من الملابس التقليدية والعصرية للإيجار بجودة عالية وأسعار تنافسية.
+        </p>
+      </section>
+  
+      <section class="about-section">
+        <h2>رؤيتنا</h2>
+        <p>
+          نهدف إلى إتاحة الموضة الراقية للجميع دون الحاجة لشراء الملابس باهظة الثمن. نؤمن بأن كل جزائري وجزائرية يستحقون الظهور بأبهى حلة في المناسبات الخاصة.
+        </p>
+      </section>
+  
+      <section class="about-section">
+        <h2>فريقنا</h2>
+        <p>
+          لدينا فريق من {{teamSize}} من المحترفين في مجال الموضة والأزياء، يعملون بجد لتقديم أفضل الخدمات والعناية بكل قطعة في مجموعتنا.
+        </p>
+      </section>
+  
+      <section class="about-section">
+        <h2>فروعنا</h2>
+        <ul>
+          <li *ngFor="let location of locations">{{location}}</li>
+        </ul>
+      </section>
+  
+      <section class="values-section">
+        <h2>قيمنا</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <h3>الجودة</h3>
+            <p>نحرص على تقديم أزياء عالية الجودة ومكوية بعناية</p>
+          </div>
+          <div class="value-card">
+            <h3>التقاليد</h3>
+            <p>نحافظ على الأصالة الجزائرية في أزيائنا</p>
+          </div>
+          <div class="value-card">
+            <h3>الابتكار</h3>
+            <p>نواكب أحدث صيحات الموضة العالمية</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  
+    <footer class="about-footer">
+      <p>تواصل معنا: contactalgerian-rental.dz | 023 45 67 89</p>
+      <p>© . جميع الحقوق محفوظة.</p>
+    </footer>
+  </div>

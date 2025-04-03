@@ -1,0 +1,354 @@
+<app-header></app-header>
+<br>
+<br>
+<br>
+<div class="profile-container">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <img [src]="'https://scontent.falg3-2.fna.fbcdn.net/v/t39.30808-6/475194432_1324260438597432_852388874385853845_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=a5f93a&_nc_eui2=AeHU-RvzMHVHu26x43vldEFe_GLhJhYd-an8YuEmFh35qRLcZu6a1_nghQktYslkRGmMW0HHPESYBG4EVROj4EEa&_nc_ohc=o_U6G5l4MMsQ7kNvgETWgE-&_nc_oc=Adkiig0FZHLbBAFmtUv63Ph5plZaX66kOvdaN6GQN7-petGIr_JQ1VNog08hPNlG8Os&_nc_zt=23&_nc_ht=scontent.falg3-2.fna&_nc_gid=J7N273mNVWbXviRRUKACcw&oh=00_AYGnYM9-Q5B1y_kaaMOCkRx3rdAW_7_pFDWx9s54Y1REMg&oe=67F2F519'" alt="User Avatar" class="avatar-image">
+        <button class="avatar-upload" aria-label="Upload new profile picture">
+          <svg viewBox="0 0 24 24" class="upload-icon">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name">{{ profile.name }}</h1>
+        <p class="profile-email">{{ profile.email }}</p>
+        <p class="profile-join-date">Member since {{ profile.joinDate }}</p>
+      </div>
+    </div>
+
+    <div class="profile-content">
+      <nav class="profile-tabs">
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'personal'"
+          (click)="switchTab('personal')">
+          Personal Info
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'orders'"
+          (click)="switchTab('orders')">
+          My Orders
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'wishlist'"
+          (click)="switchTab('wishlist')">
+          Wishlist
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'settings'"
+          (click)="switchTab('settings')">
+          Settings
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'register'"
+          (click)="switchTab('register')">
+          Register
+        </button>
+      </nav>
+  
+      <!-- Personal Info Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'personal'">
+        <div class="auth-card">
+          <div class="auth-branding">
+            <div class="logo-wrapper">
+              <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z" fill="#e63946"/>
+              </svg>
+            </div>
+            <h1 class="auth-title">Personal Information</h1>
+            <p class="auth-subtitle">Update your profile details</p>
+          </div>
+      
+          <form class="auth-form" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <!-- User Type Selection -->
+            <div class="form-group">
+              <label class="form-label">Account Type:</label>
+              <div class="user-type-selection">
+                <div class="user-type-option">
+                  <input type="radio" id="customer" formControlName="user_type" value="customer" class="user-type-radio">
+                  <label for="customer" class="user-type-label">
+                    <i class="fas fa-user"></i> Customer
+                  </label>
+                </div>
+                <div class="user-type-option">
+                  <input type="radio" id="seller" formControlName="user_type" value="seller" class="user-type-radio">
+                  <label for="seller" class="user-type-label">
+                    <i class="fas fa-store"></i> Seller
+                  </label>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Name Fields -->
+            <div class="form-group">
+              <label for="full_name" class="form-label">Full Name</label>
+              <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="full_name" formControlName="full_name" class="form-input" placeholder="Your full name" required>
+              </div>
+            </div>
+      
+            <!-- Email/Password Form -->
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <div class="input-with-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" formControlName="email" class="form-input" placeholder="your@email.com" required>
+              </div>
+            </div>
+      
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <div class="input-with-icon">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="phone" formControlName="phone" class="form-input" placeholder="+1 (555) 123-4567" required>
+              </div>
+            </div>
+      
+            <div class="form-group">
+              <label for="address" class="form-label">Shipping Address</label>
+              <textarea id="address" formControlName="address" class="form-input" placeholder="123 Main St, Apt 4B\nNew York, NY 10001" required></textarea>
+            </div>
+      
+            <div class="form-actions">
+              <button type="button" class="cancel-button" (click)="resetForm()">Cancel</button>
+              <button type="submit" class="save-button" [disabled]="!profileForm.valid">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>  
+      
+      <!-- Orders Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'orders'">
+        <div class="order-list">
+          <div class="order-card" *ngFor="let order of orders">
+            <div class="order-header">
+              <span class="order-id">Order #{{ order.id }}</span>
+              <span class="order-date">{{ order.date }}</span>
+              <span class="order-status" [class.delivered]="order.status === 'delivered'" 
+                    [class.shipped]="order.status === 'shipped'">
+                {{ order.statusText }}
+              </span>
+            </div>
+            <div class="order-items">
+              <div class="order-item" *ngFor="let item of order.items">
+                <img [src]="item.image" alt="Product" class="item-image">
+                <div class="item-details">
+                  <h3 class="item-name">{{ item.name }}</h3>
+                  <p class="item-price">${{ item.price | number:'1.2-2' }}</p>
+                  <p class="item-quantity">Quantity: {{ item.quantity }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="order-footer">
+              <span class="order-total">Total: ${{ order.total | number:'1.2-2' }}</span>
+              <button class="order-action">Track Order</button>
+              <button class="order-action">Buy Again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Wishlist Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'wishlist'">
+        <div class="wishlist-grid">
+          <div class="wishlist-item" *ngFor="let item of wishlist">
+            <button class="wishlist-remove" aria-label="Remove from wishlist">
+              <svg viewBox="0 0 24 24" class="remove-icon">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+            </button>
+            <img [src]="item.image" alt="Product" class="wishlist-image">
+            <h3 class="wishlist-name">{{ item.name }}</h3>
+            <p class="wishlist-price">${{ item.price | number:'1.2-2' }}</p>
+            <button class="wishlist-add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Settings Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'settings'">
+        <form class="settings-form">
+          <div class="form-group">
+            <label for="notifications">Email Notifications</label>
+            <select id="notifications" [(ngModel)]="settings.notifications" name="notifications">
+              <option value="all">All notifications</option>
+              <option value="important">Only important</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="theme">Theme Preference</label>
+            <select id="theme" [(ngModel)]="settings.theme" name="theme">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">System Default</option>
+            </select>
+          </div>
+          
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="newsletter" [(ngModel)]="settings.newsletter" name="newsletter">
+            <label for="newsletter">Subscribe to Fashion DZ newsletter</label>
+          </div>
+          
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="promotions" [(ngModel)]="settings.promotions" name="promotions">
+            <label for="promotions">Receive special offers and promotions</label>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="cancel-button">Cancel</button>
+            <button type="submit" class="save-button">Save Preferences</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Registration Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'register'">
+        <div class="auth-card" *ngIf="!showVerification">
+          <div class="auth-branding">
+            <div class="logo-wrapper">
+              <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z" fill="#e63946"/>
+              </svg>
+            </div>
+            <h1 class="auth-title">Create Your Account</h1>
+            <p class="auth-subtitle">Join Fashion DZ today</p>
+          </div>
+
+          <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+            <!-- Social Login Options -->
+            <div class="social-auth">
+              <button type="button" class="social-btn google-btn">
+                <i class="fab fa-google"></i> Continue with Google
+              </button>
+              <button type="button" class="social-btn facebook-btn">
+                <i class="fab fa-facebook-f"></i> Continue with Facebook
+              </button>
+            </div>
+
+            <div class="divider">
+              <span class="divider-text">or</span>
+            </div>
+
+            <!-- User Type Selection -->
+            <div class="form-group">
+              <label class="form-label">I want to register as:</label>
+              <div class="user-type-selection">
+                <div class="user-type-option">
+                  <input type="radio" id="reg_customer" formControlName="user_type" value="customer" class="user-type-radio" checked>
+                  <label for="reg_customer" class="user-type-label">
+                    <i class="fas fa-user"></i> Customer
+                  </label>
+                </div>
+                <div class="user-type-option">
+                  <input type="radio" id="reg_seller" formControlName="user_type" value="seller" class="user-type-radio">
+                  <label for="reg_seller" class="user-type-label">
+                    <i class="fas fa-store"></i> Seller
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Name Fields -->
+            <div class="form-group">
+              <label for="reg_full_name" class="form-label">Full Name</label>
+              <div class="input-with-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="reg_full_name" formControlName="full_name" class="form-input" placeholder="Your full name" required>
+              </div>
+            </div>
+
+            <!-- Email/Password Form -->
+            <div class="form-group">
+              <label for="reg_email" class="form-label">Email Address</label>
+              <div class="input-with-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="reg_email" formControlName="email" class="form-input" placeholder="your@email.com" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg_password" class="form-label">Password</label>
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="reg_password" formControlName="password" class="form-input" placeholder="••••••••" required minlength="8">
+                <button type="button" class="toggle-password" aria-label="Show password">
+                  <i class="far fa-eye"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="reg_confirm_password" class="form-label">Confirm Password</label>
+              <div class="input-with-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="reg_confirm_password" formControlName="confirm_password" class="form-input" placeholder="••••••••" required minlength="8">
+              </div>
+              <div *ngIf="registerForm.hasError('notSame')" class="error-message">
+                Passwords do not match
+              </div>
+            </div>
+
+            <!-- Terms Agreement -->
+            <div class="terms-agreement">
+              <input type="checkbox" id="reg_agree_terms" formControlName="agree_terms" required>
+              <label for="reg_agree_terms">
+                I agree to the <a href="/terms" class="terms-link">Terms of Service</a> and 
+                <a href="/privacy" class="terms-link">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button type="submit" class="auth-btn primary-btn" [disabled]="!registerForm.valid">
+              Create Account
+            </button>
+
+            <div class="auth-footer">
+              <p>Already have an account? <a href="/login" class="auth-link">Sign in</a></p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Verification Section -->
+        <div class="verification-container" *ngIf="showVerification">
+          <div class="verification-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h2 class="verification-title">Verify Your Email</h2>
+          <p class="verification-subtitle">We've sent a 6-digit code to <span id="userEmail">{{ registerForm.value.email }}</span></p>
+          
+          <div class="verification-code">
+            <input type="text" class="verification-input" maxlength="1" data-index="0" autofocus
+                   (input)="onVerificationInput($event, 0)" formControlName="code0">
+            <input type="text" class="verification-input" maxlength="1" data-index="1"
+                   (input)="onVerificationInput($event, 1)" formControlName="code1">
+            <input type="text" class="verification-input" maxlength="1" data-index="2"
+                   (input)="onVerificationInput($event, 2)" formControlName="code2">
+            <input type="text" class="verification-input" maxlength="1" data-index="3"
+                   (input)="onVerificationInput($event, 3)" formControlName="code3">
+            <input type="text" class="verification-input" maxlength="1" data-index="4"
+                   (input)="onVerificationInput($event, 4)" formControlName="code4">
+            <input type="text" class="verification-input" maxlength="1" data-index="5"
+                   (input)="onVerificationInput($event, 5)" formControlName="code5">
+          </div>
+          
+          <button type="button" class="auth-btn primary-btn" id="verifyBtn" 
+                  [disabled]="!verificationForm.valid" (click)="onVerifySubmit()">
+            Verify Account
+          </button>
+          
+          <p class="resend-code">
+            Didn't receive a code? <a class="resend-link" (click)="resendCode()">Resend code</a>
+          </p>
+        </div>
+      </div>
+    </div>
+</div>

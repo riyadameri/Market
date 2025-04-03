@@ -1,0 +1,232 @@
+<app-header></app-header>
+<br><br><br><br><br>
+<div class="product-container" *ngIf="product">
+  <div class="breadcrumb">
+    <a routerLink="/">Home</a> &gt; 
+    <a [routerLink]="['/category', product.category.toLowerCase()]">{{product.category}}</a> &gt; 
+    <span>{{product.name}}</span>
+  </div>
+
+  <div class="product-details">
+    <div class="product-gallery">
+      <div class="main-image">
+        <img [src]="product.imageUrl" [alt]="product.name">
+      </div>
+      <div class="thumbnail-container">
+        <div class="thumbnail" *ngFor="let img of product.additionalImages" (click)="changeImage(img)">
+          <img [src]="img" [alt]="product.name + ' thumbnail'">
+        </div>
+      </div>
+    </div>
+
+    <div class="product-info">
+      <h1>{{product.name}}</h1>
+      <div class="brand-info">
+        <span>Brand: </span>
+        <img [src]="product.brand.logoUrl" [alt]="product.brand.name + ' logo'" class="brand-logo">
+        <span>{{product.brand.name}}</span>
+      </div>
+      
+      <div class="rating">
+        <span class="stars">★★★★★</span>
+        <span class="rating-value">{{product.rating}}</span>
+        <span class="review-count">({{product.reviewCount}} reviews)</span>
+      </div>
+      
+      <div class="price-section">
+        <div class="current-price">
+          <span class="price">${{product.price.toFixed(2)}}</span>
+          <span class="original-price" *ngIf="product.discount > 0">${{product.originalPrice.toFixed(2)}}</span>
+          <span class="discount" *ngIf="product.discount > 0">{{product.discount}}% OFF</span>
+        </div>
+        <div class="rental-price" *ngIf="product.rentalPrice">
+          <span>or rent for ${{product.rentalPrice.toFixed(2)}}/week</span>
+        </div>
+      </div>
+      
+      <div class="short-description">
+        <p>{{product.description}}</p>
+      </div>
+      
+      <div class="color-selection">
+        <label>Color:</label>
+        <div class="color-options">
+          <div *ngFor="let color of product.colors" 
+               [class.selected]="color === selectedColor"
+               (click)="selectedColor = color">
+            <span [style.background-color]="color.toLowerCase()"></span>
+            {{color}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="size-selection">
+        <label>Size:</label>
+        <select [(ngModel)]="selectedSize">
+          <option *ngFor="let size of product.sizes" [value]="size">{{size}}</option>
+        </select>
+        <a href="#" class="size-guide">Size Guide</a>
+      </div>
+      
+      <div class="rental-selection" *ngIf="product.rentalPeriods && product.rentalPeriods.length > 0">
+        <label>Rental Period:</label>
+        <select [(ngModel)]="selectedRentalPeriod">
+          <option *ngFor="let period of product.rentalPeriods" [value]="period">{{period}}</option>
+        </select>
+      </div>
+      
+      <div class="quantity-selection">
+        <label>Quantity:</label>
+        <div class="quantity-control">
+          <button (click)="decreaseQuantity()">-</button>
+          <span>{{quantity}}</span>
+          <button (click)="increaseQuantity()">+</button>
+        </div>
+        <span class="stock-status">{{product.stock}} available</span>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="add-to-cart" (click)="addToCart($event)" [class.animate]="addToCartAnimation">
+          <span class="button-text">Add to Cart</span>
+          <span class="button-icon">✓</span>
+        </button>
+        <button class="buy-now" (click)="openPaymentModal()">Buy Now</button>
+        <button class="wishlist" (click)="toggleWishlist($event)" [class.active]="wishlistActive" [class.animate]="wishlistAnimation">
+          <span class="button-text">{{ wishlistActive ? 'In Wishlist' : 'Wishlist' }}</span>
+          <span class="button-icon">♥</span>
+        </button>
+      </div>
+      
+      <div class="delivery-info">
+        <div class="delivery-option">
+          <span class="icon">🚚</span>
+          <span>Free delivery on orders over $50</span>
+        </div>
+        <div class="delivery-option">
+          <span class="icon">🔄</span>
+          <span>30-day easy returns</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-tabs">
+    <div class="tab-header">
+      <div class="tab active">Description</div>
+      <div class="tab">Specifications</div>
+      <div class="tab">Reviews ({{product.reviewCount}})</div>
+      <div class="tab">Shipping & Returns</div>
+    </div>
+    
+    <div class="tab-content">
+      <div class="description">
+        <h3>Product Details</h3>
+        <p>{{product.detailedDescription}}</p>
+        
+        <h3>Features</h3>
+        <ul>
+          <li>Premium genuine leather material</li>
+          <li>Quilted lining for added warmth</li>
+          <li>Multiple functional pockets</li>
+          <li>Adjustable cuffs and waist belt</li>
+          <li>Asymmetrical zipper design</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-products">
+    <h2>You May Also Like</h2>
+    <div class="related-products-grid">
+      <div class="related-product" *ngFor="let related of relatedProducts" [routerLink]="['/product', related._id]">
+        <img [src]="related.imageUrl" [alt]="related.name">
+        <div class="related-info">
+          <h3>{{related.name}}</h3>
+          <div class="related-price">
+            <span class="price">${{related.price.toFixed(2)}}</span>
+            <span class="original-price" *ngIf="related.discount > 0">${{related.originalPrice.toFixed(2)}}</span>
+          </div>
+          <div class="related-rating">
+            <span class="stars">★★★★★</span>
+            <span>{{related.rating}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div *ngIf="showPaymentModal" class="payment-modal-overlay">
+  <div class="payment-modal">
+    <button class="close-modal-btn" (click)="closePaymentModal()">&times;</button>
+    <h2>Payment Instructions</h2>
+    
+    <div class="payment-details">
+      <div class="payment-info">
+        <h3>Order Summary</h3>
+        <div class="info-row">
+          <span>Product:</span>
+          <span>{{product.name}}</span>
+        </div>
+        <div class="info-row">
+          <span>Color:</span>
+          <span>{{selectedColor}}</span>
+        </div>
+        <div class="info-row">
+          <span>Size:</span>
+          <span>{{selectedSize}}</span>
+        </div>
+        <div class="info-row">
+          <span>Quantity:</span>
+          <span>{{quantity}}</span>
+        </div>
+        <div class="info-row">
+          <span>Price:</span>
+          <span>${{product.price.toFixed(2)}}</span>
+        </div>
+        <div class="info-row" *ngIf="product.rentalPrice && selectedRentalPeriod">
+          <span>Rental Period:</span>
+          <span>{{selectedRentalPeriod}}</span>
+        </div>
+        <div class="info-row total">
+          <span>Total Amount:</span>
+          <span>${{(product.price * quantity).toFixed(2)}}</span>
+        </div>
+      </div>
+      
+      <div class="payment-instructions">
+        <h3>Important Notice</h3>
+        <p>
+          <i class="icon-info">ℹ️</i>
+          You must pay the amount at the supplier from whom you purchased it to receive the suit. 
+          The supplier will provide you with the suit and a receipt containing all the purchase details.
+        </p>
+        
+        <div class="supplier-info">
+          <h4>Supplier Information</h4>
+          <p><strong>Name:</strong> {{product.brand.name}}</p>
+          <p><strong>Contact:</strong> Please check the supplier's website or contact them directly</p>
+        </div>
+      </div>
+      
+      <div class="order-number">
+        <p>Your order number: <strong>{{generateOrderNumber()}}</strong></p>
+        <small>Please reference this number when contacting the supplier</small>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="print-btn" (click)="printPaymentInstructions()">
+        Print Instructions
+      </button>
+      <button class="confirm-btn" (click)="confirmPayment()">
+        I Understand
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="loading" *ngIf="!product">
+  Loading product details...
+</div>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Fashion DZ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <!-- Minimal Header -->
+    <header class="auth-header">
+        <div class="header-content">
+            <a href="/" class="brand-logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z"/>
+                </svg>
+                <span class="logo-text">Fashion DZ</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="auth-card">
+            <!-- Branding Section -->
+            <div class="auth-branding">
+                <div class="logo-wrapper">
+                    <svg class="brand-logo-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z" fill="#e63946"/>
+                    </svg>
+                </div>
+                <h1 class="auth-title">Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your Fashion DZ account</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="loginForm">
+                <!-- Social Login Options -->
+                <div class="social-auth">
+                    <button type="button" class="social-btn google-btn">
+                        <i class="fab fa-google"></i> Continue with Google
+                    </button>
+                    <button type="button" class="social-btn facebook-btn">
+                        <i class="fab fa-facebook-f"></i> Continue with Facebook
+                    </button>
+                </div>
+
+                <div class="divider">
+                    <span class="divider-text">or</span>
+                </div>
+
+                <!-- Email/Password Form -->
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" aria-label="Show password">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember"> Remember me
+                        </label>
+                        <a href="/forgot-password" class="forgot-password">Forgot password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn primary-btn">
+                    Sign In
+                </button>
+
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="/register" class="auth-link">Create account</a></p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Page Footer -->
+    <footer class="auth-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Fashion DZ. All rights reserved.</p>
+            <nav class="footer-links">
+                <a href="/terms">Terms of Service</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/help">Help Center</a>
+            </nav>
+        </div>
+    </footer>
+</body>
+</html>

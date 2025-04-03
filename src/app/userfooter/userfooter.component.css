@@ -1,0 +1,28 @@
+  
+  .about-footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    margin-bottom: 2rem;
+    border-top: 1px solid #eee;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .about-header {
+      .logo-container {
+        flex-direction: column;
+        
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    }
+    
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
