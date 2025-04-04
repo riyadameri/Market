@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
-import { FooterComponent } from "../footer/footer.component";
 import { RouterOutlet } from '@angular/router';
 import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier',
-  imports: [HeaderComponent, FooterComponent,RouterOutlet],
+  imports: [HeaderComponent,RouterOutlet],
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css'
 })

@@ -1,0 +1,24 @@
+router.post('/add-subscription', async (req, res) => {
+    const { userId, sellerId } = req.body;
+
+    try {
+        // Find the user and update their subscriptions
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the seller is already in the subscriptions
+        if (user.subscriptions.includes(sellerId)) {
+            return res.status(400).json({ message: 'Seller already subscribed' });
+        }
+
+        // Add the seller to the subscriptions array
+        user.subscriptions.push(sellerId);
+        await user.save();
+
+        res.status(200).json({ message: 'Subscription added successfully', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding subscription', error });
+    }
+});

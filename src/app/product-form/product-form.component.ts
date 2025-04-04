@@ -57,6 +57,9 @@ export class AddProductComponent {
 
   constructor(private fb: FormBuilder) {
     this.productForm = this.fb.group({
+      _id: [''],
+      sellerId: [''],
+      region : [''],
       name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.maxLength(500)]],
       price: ['', [Validators.required, Validators.min(0)]],
@@ -76,7 +79,7 @@ export class AddProductComponent {
       reviewCount: ['', [Validators.min(0)]],
       colors: this.fb.array([this.fb.control('')]),
       sizes: this.fb.array([this.fb.control('')]),
-      rentalPeriods: this.fb.array([this.fb.control('')])
+      rentalPeriods: this.fb.array([this.fb.control('')]),
     });
   }
 

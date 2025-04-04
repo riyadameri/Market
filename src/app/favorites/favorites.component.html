@@ -28,10 +28,12 @@
               <p class="original-price">Retail: ${{item.originalPrice | number:'1.2-2'}}</p>
             </div>
             
-            <div class="item-actions">
+            <div class="item-actions"  >
               <button class="rent-btn" 
                       [disabled]="!item.isAvailable"
-                      (click)="moveToCart(item)">
+                      (click)="moveToCart(item)"
+                      routerLink="product/{{item}}"
+                      >
                 {{item.isAvailable ? 'Rent Now' : 'Not Available'}}
               </button>
             </div>

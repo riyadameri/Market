@@ -1,7 +1,29 @@
 <div class="homePage">
+
     <app-header></app-header>
     <br><br><br><br>
     <app-advertisemen-display-bar></app-advertisemen-display-bar>
+
+    <div class="advertisement-bar">
+        <div class="ads-container">
+            <button class="nav-button prev" (click)="scrollAds(-1)">‹</button>
+            
+            <div class="ads-track" #adsTrack>
+                <div class="ad-card" *ngFor="let ad of ads" (click)="navigateToAd(ad.link)">
+                    <div class="ad-image-container">
+                        <img [src]="ad.image" [alt]="ad.title" class="ad-image">
+                    </div>
+                    <div class="ad-content">
+                        <h4 class="ad-title">{{ad.title}}</h4>
+                        <p class="ad-description">{{ad.description}}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="nav-button next" (click)="scrollAds(1)">›</button>
+        </div>
+    </div>
+
     <br>
     <div class="container">
         <h1 class="page-title">Rent Premium Fashion</h1>
@@ -58,5 +80,6 @@
             </div>
         </div>
     </div>
+
     <app-userfooter></app-userfooter>
 </div>
