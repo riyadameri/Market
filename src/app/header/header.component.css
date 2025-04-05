@@ -279,11 +279,60 @@
     justify-content: center;
 }
 
-/* Account Dropdown */
-.account-dropdown {
+/* Account Dropdown Specific Styles */
+.utility-item.account-dropdown {
     position: relative;
+    margin-left: 0.5rem;
 }
 
+.utility-item.account-dropdown .utility-link {
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    width: auto;
+    min-width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #f8f8f8;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.utility-item.account-dropdown .utility-link:hover {
+    background-color: #e63946;
+    color: white;
+}
+
+.utility-item.account-dropdown .utility-link:hover .user-icon {
+    fill: white;
+}
+
+.utility-item.account-dropdown .utility-link:hover .username {
+    color: white;
+}
+
+.utility-item.account-dropdown .username {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #333;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+/* Profile image styles */
+.profile-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+}
+
+/* Account menu styles */
 .account-menu {
     position: absolute;
     top: 100%;
@@ -298,6 +347,8 @@
     transform: translateY(10px);
     transition: all 0.3s ease;
     z-index: 100;
+    border: 1px solid #eee;
+    margin-top: 0.5rem;
 }
 
 .account-dropdown:hover .account-menu {
@@ -306,11 +357,22 @@
     transform: translateY(0);
 }
 
+.account-menu .profile-image-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #eee;
+    display: block;
+    margin: 0 auto 0.5rem;
+}
+
 /* User info in dropdown */
 .user-info {
     padding: 0.5rem 0;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid #eee;
+    text-align: center;
 }
 
 .user-name {
@@ -337,11 +399,40 @@
     color: #e63946;
 }
 
-/* Username next to user icon */
-.username {
-    margin-left: 0.5rem;
-    font-weight: 500;
-    font-size: 0.9rem;
+/* Admin Inventory Button Styles */
+.utility-item.admin {
+    padding: 3px;
+    border-radius: 10px;
+    gap: 3px;
+    background-color: rgb(255, 218, 218);
+    cursor: pointer;
+    color: rgb(59, 59, 59);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.utility-item.admin:hover {
+    background-color: rgb(255, 51, 51);
+    color: white;
+    transition: all 0.3s ease;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.utility-item.admin:hover .admin-icon {
+    fill: white;
+    background-color: rgb(59, 59, 59);
+    border-radius: 10px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.admin-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    transition: all 0.3s ease;
 }
 
 /* Filter Bar Styles */
@@ -577,11 +668,16 @@
         display: none;
     }
     
-    .username {
+    .utility-item.account-dropdown .username {
         display: none;
     }
     
-    /* Adjust account menu for mobile */
+    .utility-item.account-dropdown .utility-link {
+        padding: 0;
+        width: 40px;
+        justify-content: center;
+    }
+    
     .account-menu {
         right: auto;
         left: 0;
@@ -610,79 +706,9 @@
     }
 }
 
+/* Base link styles */
 a {
     cursor: pointer;
     text-decoration: none;
     color: rgb(59, 59, 59);
-}
-
-/* Add to your existing CSS */
-/* Admin Library Icon Styles */
-.admin-icon {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
-    transition: all 0.3s ease;
-}
-
-.utility-link:hover .admin-icon {
-    transform: translateY(-2px);
-}
-
-/* Optional: Add a subtle book effect */
-.utility-item:first-child .utility-link::before {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 2px;
-    background-color: rgba(230, 57, 70, 0.5);
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.utility-item:first-child .utility-link:hover::before {
-    opacity: 1;
-}
-.utility-item{
-    display: flex;
-    align-items: center;
-
-}
-.admin{
-    padding: 3px;
-    border-radius: 10px;
-    gap: 3px;
-    background-color: rgb(255, 218, 218);
-    cursor: pointer;
-    color: rgb(59, 59, 59);
-    padding: 4px;
-
-}
-.admin:hover{
-    background-color: rgb(255, 51, 51);
-    color: white;
-    transition: all 0.3s ease;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
-}
-.admin:hover .admin-icon{
-    fill: white;
-    background-color: rgb(59, 59, 59);
-    border-radius: 10px;
-    padding: 3px;
-    cursor: pointer;
-}
-#inv{
-    padding: 3px;
-    border-radius: 10px;
-    gap: 3px;
-    background-color: rgb(255, 218, 218);
-    cursor: pointer;
-    color: rgb(59, 59, 59);
-    padding: 4px;
 }

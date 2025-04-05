@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -24,10 +25,10 @@ export class RegisterComponent {
   
   // Seller-specific fields
   shopName = '';
+  shopDescription = '';
   selectedRegions: string[] = [];
   tempSelectedRegions: string[] = [];
 
-  
   // Account details
   email = '';
   password = '';
@@ -38,14 +39,15 @@ export class RegisterComponent {
   agreeTerms = false;
   isLoading = false;
   currentStep = 1;
+  loadingMessage = '';
   
   // Image handling
   profileImage: File | null = null;
   profileImageName = '';
   profileImagePreview: string | null = null;
-  shopImage: File | null = null;
-  shopImageName = '';
-  shopImagePreview: string | null = null;
+  shopLogo: File | null = null;
+  shopLogoName = '';
+  shopLogoPreview: string | null = null;
   
   // Verification
   showVerification = false;
@@ -53,6 +55,7 @@ export class RegisterComponent {
   canResendCode = true;
   verificationError = '';
   resendMessage = '';
+  userId: string | null = null;
   
   // Algerian regions list
   algerianRegions = [
@@ -66,7 +69,7 @@ export class RegisterComponent {
     'Ghardaïa', 'Relizane'
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   /**
    * Toggles password visibility
@@ -79,9 +82,13 @@ export class RegisterComponent {
    * Moves to the next step in the registration process
    */
   nextStep(): void {
-    // Validate step 1 fields
-    if (!this.idNumber || !this.firstName || !this.lastName || !this.phoneNumber || !this.birthDate || !this.profileImage) {
-      this.verificationError = 'Please fill all required fields';
+    if (!this.idNumber || !this.firstName || !this.lastName || !this.phoneNumber || !this.birthDate) {
+      this.verificationError = 'Please fill all required personal information fields';
+      return;
+    }
+
+    if (!this.profileImage) {
+      this.verificationError = 'Please upload a profile image';
       return;
     }
 
@@ -112,7 +119,6 @@ export class RegisterComponent {
       this.profileImage = input.files[0];
       this.profileImageName = this.profileImage.name;
       
-      // Create preview
       const reader = new FileReader();
       reader.onload = () => {
         this.profileImagePreview = reader.result as string;
@@ -122,21 +128,20 @@ export class RegisterComponent {
   }
 
   /**
-   * Handles shop image selection
+   * Handles shop logo selection
    * @param event - File input change event
    */
-  onShopImageChange(event: Event): void {
+  onShopLogoChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.shopImage = input.files[0];
-      this.shopImageName = this.shopImage.name;
+      this.shopLogo = input.files[0];
+      this.shopLogoName = this.shopLogo.name;
       
-      // Create preview
       const reader = new FileReader();
       reader.onload = () => {
-        this.shopImagePreview = reader.result as string;
+        this.shopLogoPreview = reader.result as string;
       };
-      reader.readAsDataURL(this.shopImage);
+      reader.readAsDataURL(this.shopLogo);
     }
   }
 
@@ -144,9 +149,20 @@ export class RegisterComponent {
    * Handles region selection changes
    * @param event - Select change event
    */
-  onRegionChange(event: Event): void {
+  onRegionSelect(event: Event): void {
     const select = event.target as HTMLSelectElement;
-    this.selectedRegions = Array.from(select.selectedOptions).map(option => option.value);
+    this.tempSelectedRegions = Array.from(select.selectedOptions).map(option => option.value);
+  }
+
+  /**
+   * Confirms selected regions
+   */
+  confirmRegions(): void {
+    const newRegions = this.tempSelectedRegions.filter(region => 
+      !this.selectedRegions.includes(region));
+    
+    this.selectedRegions = [...this.selectedRegions, ...newRegions];
+    this.tempSelectedRegions = [];
   }
 
   /**
@@ -163,9 +179,18 @@ export class RegisterComponent {
   onSubmit(): void {
     this.verificationError = '';
     
-    // Basic validation
+    if (!this.email || !this.password || !this.confirmPassword) {
+      this.verificationError = 'Please fill all account details';
+      return;
+    }
+
     if (this.password !== this.confirmPassword) {
       this.verificationError = 'Passwords do not match!';
+      return;
+    }
+
+    if (this.password.length < 8) {
+      this.verificationError = 'Password must be at least 8 characters';
       return;
     }
 
@@ -175,12 +200,51 @@ export class RegisterComponent {
     }
 
     this.isLoading = true;
+    this.loadingMessage = 'Creating your account...';
 
-    // Simulate API call
-    setTimeout(() => {
-      this.isLoading = false;
-      this.showVerification = true;
-    }, 1000);
+    const formData = new FormData();
+    formData.append('role', this.userType);
+    formData.append('idNumber', this.idNumber);
+    formData.append('firstName', this.firstName);
+    formData.append('lastName', this.lastName);
+    formData.append('phone', this.phoneNumber);
+    formData.append('birthDate', this.birthDate);
+    formData.append('email', this.email);
+    formData.append('password', this.password);
+    
+    if (this.profileImage) {
+      formData.append('profileImage', this.profileImage);
+    }
+
+    if (this.userType === 'seller') {
+      formData.append('shopName', this.shopName);
+      formData.append('shopDescription', this.shopDescription);
+      formData.append('regions', JSON.stringify(this.selectedRegions));
+      
+      if (this.shopLogo) {
+        formData.append('shopImage', this.shopLogo);
+      }
+    }
+
+    this.authService.register(formData).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        this.loadingMessage = '';
+        
+        if (response.success) {
+          this.showVerification = true;
+          this.userId = response.userId;
+        } else {
+          this.verificationError = response.message || 'Registration failed. Please try again.';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.loadingMessage = '';
+        this.verificationError = error.error?.message || 'Server error during registration. Please try again later.';
+        console.error('Registration error:', error);
+      }
+    });
   }
 
   /**
@@ -211,7 +275,7 @@ export class RegisterComponent {
       this.verifyAccount();
     }
   }
-  
+
   /**
    * Track by function for ngFor
    * @param index - Index of the item
@@ -254,17 +318,12 @@ export class RegisterComponent {
    * @param event - Clipboard event
    */
   onVerificationPaste(event: ClipboardEvent): void {
+    event.preventDefault();
     const pasteData = event.clipboardData?.getData('text');
     
     if (pasteData && /^\d{6}$/.test(pasteData)) {
-      pasteData.split('').forEach((char, i) => {
-        if (i < this.verificationCode.length) {
-          this.verificationCode[i] = char;
-        }
-      });
-
-      this.verificationCode = [...this.verificationCode];
-
+      this.verificationCode = pasteData.split('').slice(0, 6);
+      
       const lastInput = document.querySelector(`.verification-input[data-index="5"]`) as HTMLInputElement;
       if (lastInput) lastInput.focus();
     }
@@ -287,24 +346,45 @@ export class RegisterComponent {
       return;
     }
 
-    this.isLoading = true;
+    if (!this.userId) {
+      this.verificationError = 'Session error. Please try registering again.';
+      return;
+    }
 
-    // Simulate verification
-    setTimeout(() => {
-      this.isLoading = false;
-      alert('Account verified successfully! Redirecting to dashboard...');
-      this.router.navigate(['/dashboard']);
-    }, 1000);
+    this.isLoading = true;
+    this.loadingMessage = 'Verifying your account...';
+    const code = this.verificationCode.join('');
+
+    this.authService.verifyEmail(this.userId, code).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        this.loadingMessage = '';
+        
+        if (response.success) {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          console.log('User data:', response.token);
+          
+          const redirectUrl = response.user.role === 'seller' ? '/login' : '/dashboard';
+          this.router.navigate([redirectUrl]);
+        } else {
+          this.verificationError = response.message || 'Verification failed. Please try again.';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.loadingMessage = '';
+        this.verificationError = error.error?.message || 'Server error during verification. Please try again.';
+        console.error('Verification error:', error);
+      }
+    });
   }
-  onRegionSelect(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.tempSelectedRegions = Array.from(select.selectedOptions, option => option.value);
-  }
+
   /**
    * Resends verification code
    */
   resendCode(): void {
-    if (!this.canResendCode) return;
+    if (!this.canResendCode || !this.userId) return;
 
     this.isLoading = true;
     this.resendMessage = 'Sending new code...';
@@ -313,7 +393,6 @@ export class RegisterComponent {
       this.isLoading = false;
       this.canResendCode = false;
       this.resendMessage = 'New code sent!';
-      
       this.verificationCode = Array(6).fill('');
 
       setTimeout(() => {
@@ -322,13 +401,19 @@ export class RegisterComponent {
       }, 30000);
     }, 1000);
   }
-  confirmRegions(): void {
-    // تجنب التكرار
-    const newRegions = this.tempSelectedRegions.filter(region => 
-      !this.selectedRegions.includes(region));
-    
-    this.selectedRegions = [...this.selectedRegions, ...newRegions];
-    this.tempSelectedRegions = [];
-  }
 
+  /**
+   * Checks if the current step form is valid
+   * @returns True if the form is valid
+   */
+  isFormValid(): boolean {
+    if (this.currentStep === 1) {
+      return !!this.idNumber && !!this.firstName && !!this.lastName && 
+             !!this.phoneNumber && !!this.birthDate && !!this.profileImage &&
+             (this.userType !== 'seller' || (!!this.shopName && this.selectedRegions.length > 0));
+    }
+    
+    return !!this.email && !!this.password && !!this.confirmPassword && 
+           this.password === this.confirmPassword && this.password.length >= 8 && this.agreeTerms;
+  }
 }

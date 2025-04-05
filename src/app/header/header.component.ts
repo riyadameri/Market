@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule  } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,15 +10,19 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   mobileMenuOpen = false;
   showStatesFilter = false;
   showClothingFilter = false;
   stateSearch = '';
-  isAdmin = true ;
-  currentRoute = window.location.pathname;
+  searchQuery = '';
+  currentRoute = '';
 
-  // Original Algerian states
+  // User data with default values
+  userData: any = JSON.parse(localStorage.getItem('user') || '{}');
+  defaultProfileImage = 'assets/images/default-profile.png';
+
+  // Algerian states
   algerianStates = [
     'Adrar', 'Chlef', 'Laghouat', 'Oum El Bouaghi', 'Batna', 'Béjaïa', 
     'Biskra', 'Béchar', 'Blida', 'Bouira', 'Tamanrasset', 'Tébessa',
@@ -31,9 +35,6 @@ export class HeaderComponent {
     'Aïn Témouchent', 'Ghardaïa', 'Relizane'
   ];
 
-  // Filtered states based on search
-  filteredStates = [...this.algerianStates];
-
   // Clothing categories
   clothingCategories = [
     'Traditional Algerian', 'Modern Fashion', 'Casual Wear', 
@@ -41,12 +42,63 @@ export class HeaderComponent {
     'Summer Collection', 'Kids Fashion', 'Accessories'
   ];
 
-  // Algerian traditional clothing subcategories
+  // Algerian traditional clothing
   algerianTraditional = [
     'Karakou', 'Chedda', 'Djellaba', 'Gandoura', 'Burnous',
     'Haik', 'Seroual', 'Fouta', 'Takchita', 'Blousa'
   ];
 
+  filteredStates = [...this.algerianStates];
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.currentRoute = this.router.url;
+    this.router.events.subscribe(() => {
+      this.currentRoute = this.router.url;
+    });
+  }
+
+  // User methods
+  isUserSeller() {
+    return this.userData && this.userData.role === 'seller';
+  }
+
+  isLoggedIn() {
+    return !!this.userData && !!this.userData.email;
+  }
+
+  getUserFirstName() {
+    return this.userData?.firstName || 'Guest';
+  }
+
+  getUserLastName() {
+    return this.userData?.lastName || '';
+  }
+
+  getUserEmail() {
+    return this.userData?.email || '';
+  }
+
+  getProfileImage() {
+    if (this.userData?.image) {
+      // Check if it's already a full URL (might be from social login)
+      if (this.userData.image.startsWith('http')) {
+        return this.userData.image;
+      }
+      // Otherwise, construct the URL to your backend
+      return `http://localhost:3000/uploads/${this.userData.image.split('/').pop()}`;
+    }
+    return this.defaultProfileImage;
+  }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.userData = {};
+    this.router.navigate(['/login']);
+  }
+
+  // UI methods
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
@@ -67,38 +119,45 @@ export class HeaderComponent {
     }
   }
 
+  // Search and filter methods
   filterStates() {
-    if (!this.stateSearch) {
-      this.filteredStates = [...this.algerianStates];
-      return;
+    this.filteredStates = this.stateSearch 
+      ? this.algerianStates.filter(state =>
+          state.toLowerCase().includes(this.stateSearch.toLowerCase())
+      ) : [...this.algerianStates];
+  }
+
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search'], { 
+        queryParams: { q: this.searchQuery } 
+      });
     }
-    
-    this.filteredStates = this.algerianStates.filter(state =>
-      state.toLowerCase().includes(this.stateSearch.toLowerCase())
-    );
   }
 
   filterByState(state: string) {
-    console.log('Filtering by state:', state);
-    // Implement your filtering logic here
+    this.router.navigate(['/products'], { 
+      queryParams: { state } 
+    });
     this.showStatesFilter = false;
   }
 
   filterByCategory(category: string) {
-    console.log('Filtering by category:', category);
-    // Implement your filtering logic here
+    this.router.navigate(['/products'], { 
+      queryParams: { category } 
+    });
     this.showClothingFilter = false;
   }
 
   filterByTraditional(type: string) {
-    console.log('Filtering by traditional:', type);
-    // Implement your filtering logic here
+    this.router.navigate(['/products'], { 
+      queryParams: { type } 
+    });
     this.showClothingFilter = false;
   }
 
   clearFilters() {
-    console.log('Clearing all filters');
-    // Implement your clear filters logic here
+    this.router.navigate(['/products']);
     this.showStatesFilter = false;
     this.showClothingFilter = false;
   }

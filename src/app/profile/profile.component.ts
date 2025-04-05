@@ -18,15 +18,19 @@ export class ProfileComponent {
   showVerification = false;
   verificationCode = ['', '', '', '', '', ''];
 
-  // Sample data
-  profile = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    joinDate: 'June 2023',
-    phone: '+1 (555) 123-4567',
-    address: '123 Fashion Street, Apt 4B\nNew York, NY 10001'
-  };
+  // Get user data from localStorage
+  userData: any = JSON.parse(localStorage.getItem('user') || '{}');
+  defaultProfileImage = 'assets/images/default-profile.png';
 
+  // Initialize profile data from localStorage
+  profile = {
+    name: this.userData.firstName + ' ' + this.userData.lastName,
+    email: this.userData.email,
+    joinDate: new Date(this.userData.dateOfRegistration || this.userData.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    phone: this.userData.phone,
+    address: this.userData.regions?.join(', ') || 'Address not specified'
+  };
+  
   orders = [
     {
       id: 'FDZ-2023-4567',
@@ -42,27 +46,6 @@ export class ProfileComponent {
         }
       ],
       total: 94.99
-    },
-    {
-      id: 'FDZ-2023-3210',
-      date: 'May 28, 2023',
-      status: 'shipped',
-      statusText: 'Shipped',
-      items: [
-        {
-          name: 'Casual Summer Dress',
-          price: 49.99,
-          quantity: 1,
-          image: 'https://i.pinimg.com/736x/06/5d/2f/065d2fa3de9c0618dae1075f4e8cd94b.jpg'
-        },
-        {
-          name: 'Floral Scarf',
-          price: 19.99,
-          quantity: 2,
-          image: 'https://i.pinimg.com/736x/a6/4c/34/a64c340ba67c5f55daa493cb0484c5a1.jpg'
-        }
-      ],
-      total: 89.97
     }
   ];
 
@@ -71,16 +54,6 @@ export class ProfileComponent {
       name: 'Leather Crossbody Bag',
       price: 129.99,
       image: 'https://i.pinimg.com/736x/92/27/6b/92276bdd670feaa61dd16c010fbe7be5.jpg'
-    },
-    {
-      name: 'Suede Ankle Boots',
-      price: 149.99,
-      image: 'https://i.pinimg.com/736x/c6/c6/38/c6c63802737acc97b2f0f19566b3fdf2.jpg'
-    },
-    {
-      name: 'Oversized Sunglasses',
-      price: 39.99,
-      image: 'https://i.pinimg.com/736x/4d/65/8f/4d658fd2ad28e52e55786982a8768b6e.jpg'
     }
   ];
 
@@ -92,9 +65,9 @@ export class ProfileComponent {
   };
 
   constructor(private fb: FormBuilder) {
-    // Profile Form
+    // Profile Form initialized with user data
     this.profileForm = this.fb.group({
-      user_type: ['customer', Validators.required],
+      user_type: [this.userData.role || 'customer', Validators.required],
       full_name: [this.profile.name, Validators.required],
       email: [this.profile.email, [Validators.required, Validators.email]],
       phone: [this.profile.phone, Validators.required],
@@ -122,6 +95,24 @@ export class ProfileComponent {
     });
   }
 
+  // Get user profile image or default
+  getProfileImage() {
+    if (this.userData?.image) {
+      // Check if it's already a full URL (might be from social login)
+      if (this.userData.image.startsWith('http')) {
+        return this.userData.image;
+      }
+      // Otherwise, construct the URL to your backend
+      return `http://localhost:3000/uploads/${this.userData.image.split('/').pop()}`;
+    }
+    return this.defaultProfileImage;
+  }
+
+  // Check if user is a seller
+  isUserSeller(): boolean {
+    return this.userData.role === 'seller';
+  }
+
   checkPasswords(group: FormGroup) {
     const pass = group.get('password')?.value;
     const confirmPass = group.get('confirm_password')?.value;
@@ -134,11 +125,28 @@ export class ProfileComponent {
 
   onSubmit() {
     if (this.profileForm.valid) {
-      console.log('Form submitted:', this.profileForm.value);
-      this.profile.name = this.profileForm.value.full_name;
-      this.profile.email = this.profileForm.value.email;
-      this.profile.phone = this.profileForm.value.phone;
-      this.profile.address = this.profileForm.value.address;
+      // Update user data in localStorage
+      const updatedUser = {
+        ...this.userData,
+        firstName: this.profileForm.value.full_name.split(' ')[0],
+        lastName: this.profileForm.value.full_name.split(' ')[1] || '',
+        email: this.profileForm.value.email,
+        phone: this.profileForm.value.phone,
+        regions: this.profileForm.value.address.split(', ')
+      };
+
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      this.userData = updatedUser;
+      
+      // Update profile display
+      this.profile = {
+        ...this.profile,
+        name: this.profileForm.value.full_name,
+        email: this.profileForm.value.email,
+        phone: this.profileForm.value.phone,
+        address: this.profileForm.value.address
+      };
+
       alert('Profile updated successfully!');
     }
   }
@@ -161,7 +169,7 @@ export class ProfileComponent {
 
   resetForm() {
     this.profileForm.reset({
-      user_type: 'customer',
+      user_type: this.userData.role || 'customer',
       full_name: this.profile.name,
       email: this.profile.email,
       phone: this.profile.phone,

@@ -1,7 +1,7 @@
 <!-- Minimal Header -->
 <header class="auth-header">
     <div class="header-content">
-        <a routerLink="/login" class="brand-logo">
+        <a routerLink="/" class="brand-logo">
             <svg class="logo-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2L3 12l9 10 9-10-9-10zm0 2.8L18.4 12 12 19.2 5.6 12 12 4.8z"/>
             </svg>
@@ -39,6 +39,12 @@
             </div>
 
             <form class="auth-form" (ngSubmit)="nextStep()">
+                <!-- Error Message -->
+                <div *ngIf="verificationError" class="error-message">
+                    <span class="icon">⚠️</span>
+                    {{ verificationError }}
+                </div>
+
                 <!-- User Type Selection -->
                 <div class="form-group">
                     <label class="form-label">I want to register as:</label>
@@ -126,68 +132,76 @@
                 </div>
 
                 <!-- Seller-specific fields -->
-<!-- Seller-specific fields -->
-<!-- Seller-specific fields -->
-<div *ngIf="userType === 'seller'" class="seller-fields">
-    <!-- Shop Name -->
-    <div class="form-group">
-        <label for="shop_name" class="form-label">Shop Name</label>
-        <div class="input-with-icon">
-            <span class="icon">🏪</span>
-            <input type="text" id="shop_name" name="shop_name" class="form-input" 
-                   [(ngModel)]="shopName" placeholder="Your shop name" required>
-        </div>
-    </div>
+                <div *ngIf="userType === 'seller'" class="seller-fields">
+                    <!-- Shop Name -->
+                    <div class="form-group">
+                        <label for="shop_name" class="form-label">Shop Name</label>
+                        <div class="input-with-icon">
+                            <span class="icon">🏪</span>
+                            <input type="text" id="shop_name" name="shop_name" class="form-input" 
+                                   [(ngModel)]="shopName" placeholder="Your shop name" required>
+                        </div>
+                    </div>
 
-    <!-- Shop Regions -->
-    <div class="form-group">
-        <label for="regions" class="form-label">Shop Regions</label>
-        <div class="input-with-icon">
-            <span class="icon">📍</span>
-            <select id="regions" name="regions" class="form-input" multiple
-                   (change)="onRegionSelect($event)">
-                <option *ngFor="let region of algerianRegions" 
-                        [value]="region"
-                        [disabled]="selectedRegions.includes(region)">
-                    {{region}}
-                </option>
-            </select>
-        </div>
-        <button type="button" class="auth-btn secondary-btn" 
-                (click)="confirmRegions()"
-                [disabled]="tempSelectedRegions.length === 0">
-            Add Selected Regions
-        </button>
-        
-        <div class="selected-regions" *ngIf="selectedRegions.length > 0">
-            <h4>Selected Regions:</h4>
-            <div class="region-tags">
-                <span class="region-tag" *ngFor="let region of selectedRegions">
-                    {{region}}
-                    <button type="button" class="remove-region" (click)="removeRegion(region)">×</button>
-                </span>
-            </div>
-        </div>
-    </div>
+                    <!-- Shop Description -->
+                    <div class="form-group">
+                        <label for="shop_description" class="form-label">Shop Description</label>
+                        <div class="input-with-icon">
+                            <span class="icon">📝</span>
+                            <textarea id="shop_description" name="shop_description" class="form-input" 
+                                   [(ngModel)]="shopDescription" placeholder="Brief description of your shop"></textarea>
+                        </div>
+                    </div>
 
-    <!-- Shop Image -->
-    <div class="form-group">
-        <label for="shop_image" class="form-label">Shop Image</label>
-        <div class="file-upload">
-            <input type="file" id="shop_image" name="shop_image" 
-                   (change)="onShopImageChange($event)" accept="image/*" class="file-input">
-            <label for="shop_image" class="file-label">
-                <span class="icon">🖼️</span>
-                <span class="file-text">{{shopImageName || 'Choose shop image'}}</span>
-            </label>
-        </div>
-        <div *ngIf="shopImagePreview" class="image-preview">
-            <img [src]="shopImagePreview" alt="Shop preview" class="preview-image">
-        </div>
-    </div>
-</div>
+                    <!-- Shop Regions -->
+                    <div class="form-group">
+                        <label for="regions" class="form-label">Shop Regions</label>
+                        <div class="input-with-icon">
+                            <span class="icon">📍</span>
+                            <select id="regions" name="regions" class="form-input" multiple
+                                   (change)="onRegionSelect($event)">
+                                <option *ngFor="let region of algerianRegions" 
+                                        [value]="region"
+                                        [disabled]="selectedRegions.includes(region)">
+                                    {{region}}
+                                </option>
+                            </select>
+                        </div>
+                        <button type="button" class="auth-btn secondary-btn" 
+                                (click)="confirmRegions()"
+                                [disabled]="tempSelectedRegions.length === 0">
+                            Add Selected Regions
+                        </button>
+                        
+                        <div class="selected-regions" *ngIf="selectedRegions.length > 0">
+                            <h4>Selected Regions:</h4>
+                            <div class="region-tags">
+                                <span class="region-tag" *ngFor="let region of selectedRegions">
+                                    {{region}}
+                                    <button type="button" class="remove-region" (click)="removeRegion(region)">×</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
-                <button type="submit" class="auth-btn primary-btn" [disabled]="isLoading">
+                    <!-- Shop Logo -->
+                    <div class="form-group">
+                        <label for="shop_logo" class="form-label">Shop Logo</label>
+                        <div class="file-upload">
+                            <input type="file" id="shop_logo" name="shop_logo" 
+                                   (change)="onShopLogoChange($event)" accept="image/*" class="file-input">
+                            <label for="shop_logo" class="file-label">
+                                <span class="icon">🖼️</span>
+                                <span class="file-text">{{shopLogoName || 'Choose shop logo'}}</span>
+                            </label>
+                        </div>
+                        <div *ngIf="shopLogoPreview" class="image-preview">
+                            <img [src]="shopLogoPreview" alt="Shop logo preview" class="preview-image">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn primary-btn" [disabled]="!isFormValid() || isLoading">
                     <span *ngIf="!isLoading">Continue to Account Details</span>
                     <span *ngIf="isLoading" class="loading-spinner"></span>
                 </button>
@@ -208,7 +222,8 @@
 
             <form class="auth-form" (ngSubmit)="onSubmit()">
                 <!-- Error Message -->
-                <div class="error-message" *ngIf="verificationError">
+                <div *ngIf="verificationError" class="error-message">
+                    <span class="icon">⚠️</span>
                     {{ verificationError }}
                 </div>
 
@@ -259,8 +274,9 @@
                     <button type="button" class="auth-btn secondary-btn" (click)="prevStep()">
                         Back
                     </button>
-                    <button type="submit" class="auth-btn primary-btn" [disabled]="isLoading">
-                        <span *ngIf="!isLoading">Create Account</span>
+                    <button type="submit" class="auth-btn primary-btn" 
+                            [disabled]="!isFormValid() || isLoading">
+                        <span *ngIf="!isLoading">Complete Registration</span>
                         <span *ngIf="isLoading" class="loading-spinner"></span>
                     </button>
                 </div>
@@ -282,12 +298,12 @@
             
             <div class="verification-code">
                 <input *ngFor="let digit of verificationCode; let i = index; trackBy: trackByIndex" 
-                type="text" class="verification-input" maxlength="1" 
-                [attr.data-index]="i" [(ngModel)]="verificationCode[i]" 
-                (ngModelChange)="onVerificationInput(i, $event)"
-                (keydown)="onVerificationKeyDown(i, $event)"
-                (paste)="onVerificationPaste($event)"
-                [ngModelOptions]="{standalone: true}">
+                       type="text" class="verification-input" maxlength="1" 
+                       [attr.data-index]="i" [(ngModel)]="verificationCode[i]" 
+                       (ngModelChange)="onVerificationInput(i, $event)"
+                       (keydown)="onVerificationKeyDown(i, $event)"
+                       (paste)="onVerificationPaste($event)"
+                       [ngModelOptions]="{standalone: true}">
             </div>
             
             <button type="button" class="auth-btn primary-btn" 
