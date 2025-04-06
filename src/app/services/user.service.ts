@@ -10,8 +10,9 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  login(email: string, password: string): Observable<any> {
-    const loginData = { email, password };
-    return this.http.post(`${this.apiUrl}/login`, loginData, { headers: { 'Content-Type': 'application/json' } });
+  getUserDataById(id:string){
+    return this.http.get(`${this.apiUrl}/get/${id}`)
   }
+
+
 }

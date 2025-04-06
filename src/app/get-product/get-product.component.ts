@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-
+import { ActivatedRoute } from '@angular/router';
+import { ProductService } from '../services/product.service';
 @Component({
   selector: 'app-get-product',
   standalone: true,
@@ -12,6 +13,8 @@ import { HeaderComponent } from '../header/header.component';
   styleUrls: ['./get-product.component.css']
 })
 export class GetProductComponent {
+  userData: any = JSON.parse(localStorage.getItem('user') || '{}');
+
   productId: string | null = null;
   product: any = null;
   selectedSize: string = '';
@@ -25,111 +28,37 @@ export class GetProductComponent {
   wishlistAnimation: boolean = false;
   wishlistActive: boolean = false;
 
-  constructor() {
-    this.productId = '1';
-    this.fetchProduct(this.productId);
-    this.fetchRelatedProducts();
+  defaultProfileImage = 'https://cdn.pixabay.com/photo/2012/04/15/19/13/box-34980_640.png';
+
+  constructor(    
+    private route: ActivatedRoute,
+    private ProductService :ProductService
+
+    ) {
+
   }
 
-  fetchProduct(productId: string | null) {
-    if (productId) {
-      const mockProducts = [
-        {
-          _id: 1,
-          name: 'Premium Leather Jacket',
-          description: 'Handcrafted genuine leather jacket with premium stitching.',
-          detailedDescription: 'This premium leather jacket is crafted from top-grain cowhide leather that offers durability and a luxurious feel.',
-          price: 89.99,
-          originalPrice: 120.99,
-          rentalPrice: 29.99,
-          imageUrl: 'https://i.pinimg.com/736x/18/41/88/1841882091b80ce14746f504d7298d30.jpg',
-          additionalImages: [
-            'https://i.pinimg.com/736x/c7/c8/5c/c7c85c4fb54186485cacf5b72d95009b.jpg',
-            'https://i.pinimg.com/736x/18/41/88/1841882091b80ce14746f504d7298d30.jpg',
-            'https://i.pinimg.com/736x/c7/c8/5c/c7c85c4fb54186485cacf5b72d95009b.jpg'
-          ],
-          category: 'Outerwear',
-          stock: 15,
-          discount: 17,
-          isFeatured: true,
-          isAvailable: true,
-          brand: {
-            name: 'Redox',
-            logoUrl: 'https://redoxcsl.web.app/assets/redox-icon.png'
-          },
-          rating: 4.8,
-          reviewCount: 124,
-          colors: ['Black', 'Brown', 'Tan'],
-          sizes: ['S', 'M', 'L', 'XL'],
-          rentalPeriods: ['3 days', '1 week', '2 weeks'],
-          specifications: {
-            material: '100% Genuine Leather',
-            lining: 'Polyester Quilted Lining',
-            closure: 'Zipper',
-            pockets: '4 (2 external, 2 internal)',
-            careInstructions: 'Wipe clean with damp cloth.'
-          },
-          reviews: [
-            {
-              user: 'Alex Johnson',
-              rating: 5,
-              date: '2023-10-15',
-              comment: 'Absolutely love this jacket!'
-            },
-            {
-              user: 'Sarah Miller',
-              rating: 4,
-              date: '2023-09-28',
-              comment: 'Great jacket, very stylish.'
-            }
-          ]
-        }
-      ];
-      
-      this.product = mockProducts.find(p => p._id == +productId) || null;
-      
-      if (this.product) {
-        this.selectedColor = this.product.colors[0];
-        this.selectedSize = this.product.sizes[0];
-        this.selectedRentalPeriod = this.product.rentalPeriods[0];
+  prod : any = []
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.productId = params['id'];
+      console.log('Product ID:', this.productId);
+      this.ProductService.getProductById(this.productId ? this.productId.toString() : '').subscribe((data) => {
+        this.prod = data;
+        console.log(this.prod);
       }
-    }
+      );
+
+    });
   }
 
-  fetchRelatedProducts() {
-    this.relatedProducts = [
-      {
-        _id: 11,
-        name: 'Vintage Leather Boots',
-        description: 'Durable and stylish leather boots for all occasions',
-        price: 129.99,
-        originalPrice: 159.99,
-        imageUrl: 'https://i.pinimg.com/736x/18/41/88/1841882091b80ce14746f504d7298d30.jpg',
-        discount: 19,
-        rating: 4.6
-      },
-      {
-        _id: 15,
-        name: 'Designer Handbag',
-        description: 'Elegant handbag with premium leather finish',
-        price: 199.99,
-        originalPrice: 249.99,
-        imageUrl: 'https://i.pinimg.com/736x/c7/c8/5c/c7c85c4fb54186485cacf5b72d95009b.jpg',
-        discount: 20,
-        rating: 4.9
-      },
-      {
-        _id: 22,
-        name: 'Formal Watch',
-        description: 'Elegant watch for formal occasions',
-        price: 199.99,
-        originalPrice: 249.99,
-        imageUrl: 'https://i.pinimg.com/736x/c7/c8/5c/c7c85c4fb54186485cacf5b72d95009b.jpg',
-        discount: 20,
-        rating: 4.9
-      }
-    ];
-  }
+
+
+
+
+
+
 
   handleClick(event: MouseEvent, type: 'cart' | 'wishlist') {
     if (type === 'cart') {
@@ -238,8 +167,43 @@ export class GetProductComponent {
     window.print();
   }
 
+  
+
   confirmPayment() {
     this.closePaymentModal();
     alert(`Order ${this.orderNumber} has been confirmed. Please proceed with payment to the supplier.`);
+    this.ProductService.createOrder({
+      userId : this.userData._id,
+      sellerId : this.prod.userId,
+      productId : this.prod._id,
+      totalPrice : this.prod.price ,
+      userPhone : this.userData.phone,
+      orderNumber: this.orderNumber,
+      size: this.selectedSize,
+      color: this.selectedColor,
+      quantity: this.quantity
+
+    }).subscribe(response => {
+      console.log('Order created:', response);
+    }, error => {
+      console.error('Error creating order:', error);
+    });
+
   }
+
+  getProductImage(product: any) {
+    if (product?.image) {
+      // Check if it's already a full URL (might be from social login)
+      if (product.image.startsWith('http')) {
+        return product.image;
+      }
+      // Otherwise, construct the URL to your backend
+      return `http://localhost:3000/uploads/${product.image.split('/').pop()}`;
+    }
+    return this.defaultProfileImage;
+  }
+
+  
+  
+
 }

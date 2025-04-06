@@ -11,6 +11,8 @@ const nodemailer = require('nodemailer');
 const sanitizeHtml = require('sanitize-html');
 const validator = require('validator');
 
+
+
 // Rate limiting configuration
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -349,13 +351,16 @@ router.post('/login', apiLimiter, async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+    console.log('Found user:', user ? user.email : 'none'); // Debug log
+
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials Redox ES : 202303'
+        message: 'Invalid credentials (user not found)'
       });
     }
 
+    console.log('User active status:', user.isActive); // Debug log
     if (!user.isActive) {
       return res.status(403).json({
         success: false,
@@ -363,13 +368,22 @@ router.post('/login', apiLimiter, async (req, res) => {
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Comparing passwords...'); // Debug log
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const isMatch = await bcrypt.compare(password, hashedPassword);
+    console.log('Password match result:', isMatch); // Debug log
+
     if (!isMatch) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials 402303'
+        message: 'Invalid credentials (password mismatch)',
+        debug: {
+          inputPasswordLength: password.length,
+          storedHashLength: user.password.length
+        }
       });
     }
+
 
     const token = generateToken(user);
 
@@ -646,5 +660,35 @@ router.delete('/remove-subscription/:sellerId', apiLimiter, authMiddleware, asyn
     });
   }
 });
+
+
+// Get user data by ID
+router.get('/get/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+
+router.get('/get/userName/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('firstName lastName');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ firstName: user.firstName, lastName: user.lastName });
+  } catch (error) {
+    console.error('Error fetching user name by ID:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 
 module.exports = router;

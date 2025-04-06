@@ -1,29 +1,35 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import './config/config.js';
 import cors from 'cors';
-import userRoutes from './routes/user.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import './config/config.js';
+import userRoutes from './routes/user.js';
+import productRouter from './routes/product.js';
+
 dotenv.config();
 
-// Define __dirname for ES modules
+// Setup __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 5000;
 const app = express();
+const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from the uploads directory
+// Serve static files from uploads folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Routes
 app.use('/user', userRoutes);
+app.use('/product', productRouter);
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`🖥 Server is running on port ${PORT}  ✅`);
+  console.log(`🖥 Server is running on port ${PORT} ✅`);
 });

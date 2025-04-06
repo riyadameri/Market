@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit {
 
   // User data with default values
   userData: any = JSON.parse(localStorage.getItem('user') || '{}');
-  defaultProfileImage = 'assets/images/default-profile.png';
+  defaultProfileImage = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
   // Algerian states
   algerianStates = [

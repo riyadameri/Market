@@ -1,5 +1,4 @@
 <div class="homePage">
-
     <app-header></app-header>
     <br><br><br><br>
     <app-advertisemen-display-bar></app-advertisemen-display-bar>
@@ -35,47 +34,47 @@
                 <div class="product-badge discount" *ngIf="product.discount">{{product.discount}}% OFF</div>
                 
                 <div class="product-image-container">
-                    <img [src]="product.imageUrl" [alt]="product.name" class="product-image">
+                    <img [src]="getProductImage(product)" class="product-image">
                     <div class="quick-view-overlay">
                         <div class="quick-view-content">
                             <h4>Quick View</h4>
                             <div class="quick-details">
-                                <p><strong>Brand:</strong> {{product.brand.name}}</p>
+                                <p><strong>ID:</strong> {{product._id}}</p>
                                 <p><strong>Category:</strong> {{product.category}}</p>
                                 <p><strong>Sizes:</strong> {{product.sizes.join(', ')}}</p>
                                 <p><strong>Colors:</strong> {{product.colors.join(', ')}}</p>
                                 <p><strong>Rental Options:</strong> {{product.rentalPeriods.join(', ')}}</p>
                             </div>
-                            <button class="quick-view-button" (click)="$event.stopPropagation()" (click)="addToCart(product._id)">
+                            <button class="quick-view-button" (click)="$event.stopPropagation(); addToCart(product._id)">
                                 <i class="fas fa-heart"></i>
                                 Add to cart
                             </button>
-                            <button class="quick-rent-button" (click)="$event.stopPropagation()" [routerLink]="['/product', product._id]" >Rent Now</button>
+                            <button class="quick-rent-button" (click)="$event.stopPropagation()" [routerLink]="['/product', product._id]">Rent Now</button>
                         </div>
                     </div>
                 </div>
                 
                 <div class="product-details">
                     <h3 class="product-name">{{product.name}}</h3>
-                    <div class="product-brand">{{product.brand.name}}</div>
+                    <div class="product-brand">{{product.brand}}</div>
                     
                     <div class="price-container">
                         <div class="rental-price">${{product.rentalPrice}} <span class="rental-period">/week</span></div>
-                        <div class="original-price">Retail: ${{product.price}}</div>
+                        <div class="original-price">Retail: ${{product.originalPrice}}</div>
                     </div>
                     
                     <div class="product-meta">
                         <div class="rating">
                             <span class="stars">★★★★★</span>
-                            <span class="rating-value">{{product.rating}}</span>
-                            <span class="review-count">({{product.reviewCount}})</span>
+                            <span class="rating-value">4.5</span>
+                            <span class="review-count">(25)</span>
                         </div>
-                        <div class="availability" [class.in-stock]="product.isAvailable" [class.out-of-stock]="!product.isAvailable">
-                            {{product.isAvailable ? 'Available' : 'Booked'}}
+                        <div class="availability" [class.in-stock]="product.stock > 0" [class.out-of-stock]="product.stock <= 0">
+                            {{product.stock > 0 ? 'Available' : 'Booked'}}
                         </div>
                     </div>
                     
-                    <button class="rent-button" (click)="$event.stopPropagation()" [routerLink]="['/product', product._id]" >Rent Now</button>
+                    <button class="rent-button" (click)="$event.stopPropagation()" [routerLink]="['/product', product._id]">Rent Now</button>
                 </div>
             </div>
         </div>

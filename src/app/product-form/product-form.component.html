@@ -1,13 +1,15 @@
-<app-header></app-header>
-<br><br><br><br>
 <div class="product-form-container">
-    <h2>Add New Product</h2>
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form" enctype="multipart/form-data">
+    <br><br><br><br>
+    <app-header></app-header>
+    
+    <div class="form-wrapper">
+      <h1>Add New Product</h1>
       
-      <!-- Basic Information -->
-      <div class="form-section">
-        <h3>Basic Information</h3>
-        <div class="form-row">
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+        <!-- Basic Information Section -->
+        <div class="form-section">
+          <h2>Basic Information</h2>
+          
           <div class="form-group">
             <label for="name">Product Name*</label>
             <input type="text" id="name" formControlName="name" placeholder="Enter product name">
@@ -15,246 +17,231 @@
               Product name is required (max 100 characters)
             </div>
           </div>
-  
+          
           <div class="form-group">
-            <label for="category">Category*</label>
-            <select id="category" formControlName="category">
-              <option value="">Select a category</option>
-              <option *ngFor="let category of categories" [value]="category">{{category}}</option>
-            </select>
-            <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="error-message">
-              Category is required
+            <label for="description">Description*</label>
+            <textarea id="description" formControlName="description" rows="4" placeholder="Enter product description"></textarea>
+            <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="error-message">
+              Description is required (max 500 characters)
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category*</label>
+              <select id="category" formControlName="category">
+                <option value="">Select a category</option>
+                <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+              </select>
+              <div *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="error-message">
+                Category is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="stock">Stock Quantity*</label>
+              <input type="number" id="stock" formControlName="stock" min="0" placeholder="Enter quantity">
+              <div *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched" class="error-message">
+                Valid stock quantity is required
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="regions">Available Regions</label>
+            <input type="text" id="regions" formControlName="regions" placeholder="Enter regions (comma separated)">
+          </div>
+        </div>
+        
+        <!-- Pricing Section -->
+        <div class="form-section">
+          <h2>Pricing Information</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="originalPrice">Original Price ($)*</label>
+              <input type="number" id="originalPrice" formControlName="originalPrice" min="0" step="0.01" placeholder="0.00">
+              <div *ngIf="productForm.get('originalPrice')?.invalid && productForm.get('originalPrice')?.touched" class="error-message">
+                Valid original price is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="price">Selling Price ($)*</label>
+              <input type="number" id="price" formControlName="price" min="0" step="0.01" placeholder="0.00">
+              <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="error-message">
+                Valid selling price is required
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="rentalPrice">Rental Price ($)*</label>
+              <input type="number" id="rentalPrice" formControlName="rentalPrice" min="0" step="0.01" placeholder="0.00">
+              <div *ngIf="productForm.get('rentalPrice')?.invalid && productForm.get('rentalPrice')?.touched" class="error-message">
+                Valid rental price is required
+              </div>
             </div>
           </div>
         </div>
-  
-        <div class="form-group">
-          <label for="description">Description*</label>
-          <textarea id="description" formControlName="description" rows="3" placeholder="Enter product description"></textarea>
-          <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="error-message">
-            Description is required (max 500 characters)
-          </div>
-        </div>
-      </div>
-  
-      <!-- Pricing Information -->
-      <div class="form-section">
-        <h3>Pricing Information</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="price">Price*</label>
-            <input type="number" id="price" formControlName="price" placeholder="0.00" step="0.01" min="0">
-            <div *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched" class="error-message">
-              Valid price is required
-            </div>
-          </div>
-  
-          <div class="form-group">
-            <label for="originalPrice">Original Price</label>
-            <input type="number" id="originalPrice" formControlName="originalPrice" placeholder="0.00" step="0.01" min="0">
-          </div>
-  
-          <div class="form-group">
-            <label for="discount">Discount (%)</label>
-            <input type="number" id="discount" formControlName="discount" placeholder="0" min="0" max="100">
-            <div *ngIf="productForm.get('discount')?.invalid && productForm.get('discount')?.touched" class="error-message">
-              Must be between 0-100
-            </div>
-          </div>
-        </div>
-  
-        <div class="form-row">
-          <div class="form-group">
-            <label for="rentalPrice">Rental Price</label>
-            <input type="number" id="rentalPrice" formControlName="rentalPrice" placeholder="0.00" step="0.01" min="0">
-          </div>
-  
-          <div class="form-group">
-            <label for="stock">Stock Quantity*</label>
-            <input type="number" id="stock" formControlName="stock" placeholder="0" min="0">
-            <div *ngIf="productForm.get('stock')?.invalid && productForm.get('stock')?.touched" class="error-message">
-              Valid quantity is required
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Brand Information -->
-      <div class="form-section">
-        <h3>Brand Information</h3>
-        <div class="form-row">
-          <div class="form-group">
+        
+        <!-- Brand Information Section -->
+        <div class="form-section">
+          <h2>Brand Information</h2>
+          
+          <div class="form-group" formGroupName="brand">
             <label for="brandName">Brand Name*</label>
-            <input type="text" id="brandName" formControlName="brand.name" placeholder="Enter brand name">
+            <input type="text" id="brandName" formControlName="name" placeholder="Enter brand name">
             <div *ngIf="productForm.get('brand.name')?.invalid && productForm.get('brand.name')?.touched" class="error-message">
               Brand name is required
             </div>
           </div>
-  
-          <div class="form-group">
-            <label for="brandLogo">Brand Logo</label>
-            <input type="file" id="brandLogo" (change)="onBrandLogoChange($event)" accept="image/*">
-            <div *ngIf="brandLogoPreview" class="image-preview">
-              <img [src]="brandLogoPreview" alt="Brand logo preview" class="preview-image">
-              <button type="button" (click)="removeBrandLogo()" class="remove-image-btn">×</button>
+          
+          <div class="form-group" formGroupName="brand">
+            <label>Brand Logo*</label>
+            <div class="file-upload-wrapper">
+              <input type="file" id="brandLogo" (change)="onBrandLogoChange($event)" accept="image/*" class="file-input">
+              <label for="brandLogo" class="file-upload-label">
+                <span *ngIf="!brandLogoPreview">Choose Brand Logo</span>
+                <span *ngIf="brandLogoPreview">Change Logo</span>
+              </label>
+              <div *ngIf="brandLogoPreview" class="image-preview-container">
+                <img [src]="brandLogoPreview" alt="Brand Logo Preview" class="image-preview">
+                <button type="button" (click)="removeBrandLogo()" class="remove-image-btn">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="productForm.get('brand.logoFile')?.invalid && productForm.get('brand.logoFile')?.touched" class="error-message">
+              Brand logo is required
             </div>
           </div>
         </div>
-      </div>
-  
-      <!-- Product Options -->
-      <div class="form-section">
-        <h3>Product Options</h3>
         
-        <div class="form-row">
+        <!-- Product Image Section -->
+        <div class="form-section">
+          <h2>Product Image</h2>
+          
           <div class="form-group">
-            <label>Colors</label>
-            <div formArrayName="colors" class="array-controls">
-              <div *ngFor="let color of colors.controls; let i = index" class="array-item">
-                <input type="text" [formControlName]="i" placeholder="Color name">
-                <button type="button" (click)="removeColor(i)" class="remove-btn" *ngIf="colors.length > 1">×</button>
+            <label>Main Product Image*</label>
+            <div class="file-upload-wrapper">
+              <input type="file" id="productImage" (change)="onImageChange($event)" accept="image/*" class="file-input">
+              <label for="productImage" class="file-upload-label">
+                <span *ngIf="!imagePreview">Choose Product Image</span>
+                <span *ngIf="imagePreview">Change Image</span>
+              </label>
+              <div *ngIf="imagePreview" class="image-preview-container">
+                <img [src]="imagePreview" alt="Product Image Preview" class="image-preview">
+                <button type="button" (click)="removeImage()" class="remove-image-btn">
+                  <i class="fas fa-times"></i>
+                </button>
               </div>
-              <button type="button" (click)="addColor()" class="add-btn">+ Add Color</button>
+            </div>
+            <div *ngIf="productForm.get('imageFile')?.invalid && productForm.get('imageFile')?.touched" class="error-message">
+              Product image is required
             </div>
           </div>
-  
+        </div>
+        
+        <!-- Variants Section -->
+        <div class="form-section">
+          <h2>Product Variants</h2>
+          
           <div class="form-group">
-            <label>Sizes</label>
+            <label>Colors*</label>
+            <div formArrayName="colors" class="array-controls">
+              <div *ngFor="let color of colors.controls; let i = index" class="array-item">
+                <input type="text" [formControlName]="i" placeholder="Enter color">
+                <button type="button" (click)="removeColor(i)" class="remove-btn" [disabled]="colors.length <= 1">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+              <button type="button" (click)="addColor()" class="add-btn">
+                <i class="fas fa-plus"></i> Add Color
+              </button>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Sizes*</label>
             <div formArrayName="sizes" class="array-controls">
               <div *ngFor="let size of sizes.controls; let i = index" class="array-item">
                 <select [formControlName]="i">
                   <option value="">Select size</option>
                   <option *ngFor="let sizeOption of sizeOptions" [value]="sizeOption">{{sizeOption}}</option>
                 </select>
-                <button type="button" (click)="removeSize(i)" class="remove-btn" *ngIf="sizes.length > 1">×</button>
+                <button type="button" (click)="removeSize(i)" class="remove-btn" [disabled]="sizes.length <= 1">
+                  <i class="fas fa-minus"></i>
+                </button>
               </div>
-              <button type="button" (click)="addSize()" class="add-btn">+ Add Size</button>
+              <button type="button" (click)="addSize()" class="add-btn">
+                <i class="fas fa-plus"></i> Add Size
+              </button>
             </div>
           </div>
-        </div>
-  
-        <div class="form-group">
-          <label>Rental Periods</label>
-          <div formArrayName="rentalPeriods" class="array-controls">
-            <div *ngFor="let period of rentalPeriods.controls; let i = index" class="array-item">
-              <select [formControlName]="i">
-                <option value="">Select period</option>
-                <option *ngFor="let periodOption of rentalPeriodOptions" [value]="periodOption">{{periodOption}}</option>
-              </select>
-              <button type="button" (click)="removeRentalPeriod(i)" class="remove-btn" *ngIf="rentalPeriods.length > 1">×</button>
-            </div>
-            <button type="button" (click)="addRentalPeriod()" class="add-btn">+ Add Rental Period</button>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Additional Information -->
-      <div class="form-section">
-        <h3>Additional Information</h3>
-        <div class="form-row">
+          
           <div class="form-group">
-            <label for="productImage">Product Image*</label>
-            <input type="file" id="productImage" (change)="onImageChange($event)" accept="image/*" required>
-            <div *ngIf="imagePreview" class="image-preview">
-              <img [src]="imagePreview" alt="Product image preview" class="preview-image">
-              <button type="button" (click)="removeImage()" class="remove-image-btn">×</button>
-            </div>
-            <div *ngIf="!productForm.get('imageFile')?.valid && productForm.get('imageFile')?.touched" class="error-message">
-              Product image is required
-            </div>
-          </div>
-  
-          <div class="form-group">
-            <label for="rating">Rating</label>
-            <input type="number" id="rating" formControlName="rating" placeholder="0-5" step="0.1" min="0" max="5">
-            <div *ngIf="productForm.get('rating')?.invalid && productForm.get('rating')?.touched" class="error-message">
-              Must be between 0-5
-            </div>
-          </div>
-  
-          <div class="form-group">
-            <label for="reviewCount">Review Count</label>
-            <input type="number" id="reviewCount" formControlName="reviewCount" placeholder="0" min="0">
-            <div *ngIf="productForm.get('reviewCount')?.invalid && productForm.get('reviewCount')?.touched" class="error-message">
-              Must be a positive number
+            <label>Rental Periods*</label>
+            <div formArrayName="rentalPeriods" class="array-controls">
+              <div *ngFor="let period of rentalPeriods.controls; let i = index" class="array-item">
+                <select [formControlName]="i">
+                  <option value="">Select rental period</option>
+                  <option *ngFor="let periodOption of rentalPeriodOptions" [value]="periodOption">{{periodOption}}</option>
+                </select>
+                <button type="button" (click)="removeRentalPeriod(i)" class="remove-btn" [disabled]="rentalPeriods.length <= 1">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+              <button type="button" (click)="addRentalPeriod()" class="add-btn">
+                <i class="fas fa-plus"></i> Add Rental Period
+              </button>
             </div>
           </div>
         </div>
-  
-        <div class="form-row">
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" formControlName="isFeatured"> Featured Product
-            </label>
-          </div>
-  
-          <div class="form-group checkbox-group">
-            <label>
-              <input type="checkbox" formControlName="isAvailable"> Available for Sale
-            </label>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="submit" class="submit-btn" [disabled]="productForm.invalid">Save Product</button>
-        <button type="button" class="cancel-btn" routerLink="/products">Cancel</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- Add this at the bottom of your product-form.component.html -->
-<div *ngIf="showPaymentModal" class="payment-modal-overlay">
-  <div class="payment-modal">
-    <button class="close-modal-btn" (click)="closePaymentModal()">&times;</button>
-    <h2>Payment Instructions</h2>
-    
-    <div class="payment-details">
-      <div class="payment-info">
-        <h3>Order Summary</h3>
-        <div class="info-row">
-          <span>Product:</span>
-          <span>{{productForm.get('name')?.value}}</span>
-        </div>
-        <div class="info-row">
-          <span>Price:</span>
-          <span>${{productForm.get('price')?.value | number:'1.2-2'}}</span>
-        </div>
-        <div class="info-row" *ngIf="productForm.get('rentalPrice')?.value">
-          <span>Rental Price:</span>
-          <span>${{productForm.get('rentalPrice')?.value | number:'1.2-2'}}</span>
-        </div>
-      </div>
-      
-      <div class="payment-instructions">
-        <h3>Important Notice</h3>
-        <p>
-          <i class="icon-info"></i>
-          You must pay the amount at the supplier from whom you purchased it to receive the suit. 
-          The supplier will provide you with the suit and a receipt containing all the purchase details.
-        </p>
         
-        <div class="supplier-info">
-          <h4>Supplier Information</h4>
-          <p><strong>Name:</strong> {{productForm.get('brand.name')?.value}}</p>
-          <p><strong>Contact:</strong> Please check the supplier's website or contact them directly</p>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="productForm.invalid">
+            Add Product
+          </button>
         </div>
-      </div>
-      
-      <div class="order-number">
-        <p>Your order number: <strong>{{generateOrderNumber()}}</strong></p>
-        <small>Please reference this number when contacting the supplier</small>
-      </div>
+      </form>
     </div>
     
-    <div class="modal-actions">
-      <button class="print-btn" (click)="printPaymentInstructions()">
-        <i class="icon-print"></i> Print Instructions
-      </button>
-      <button class="confirm-btn" (click)="confirmPayment()">
-        I Understand
-      </button>
+    <!-- Payment Modal -->
+    <div *ngIf="showPaymentModal" class="modal-overlay">
+      <div class="payment-modal">
+        <div class="modal-header">
+          <h2>Order Confirmation</h2>
+          <button type="button" (click)="closePaymentModal()" class="close-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <div class="order-details">
+            <p><strong>Order Number:</strong> {{orderNumber}}</p>
+            <p>Your product has been successfully added to the platform.</p>
+            <p>Please proceed with the payment to the supplier to complete the process.</p>
+          </div>
+          
+          <div class="payment-instructions">
+            <h3>Payment Instructions</h3>
+            <ol>
+              <li>Transfer the total amount to the supplier's bank account</li>
+              <li>Include the order number in the payment reference</li>
+              <li>Send the payment confirmation to support entalplatform.com</li>
+              <li>Your product will be activated within 24 hours of payment confirmation</li>
+            </ol>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" (click)="printPaymentInstructions()" class="print-btn">
+            <i class="fas fa-print"></i> Print Instructions
+          </button>
+          <button type="button" (click)="confirmPayment()" class="confirm-btn">
+            I Understand, Proceed
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>

@@ -3,28 +3,30 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
+import { ProductService } from '../services/product.service';
 
 interface OrderItem {
-  productId: number;
-  name: string;
-  imageUrl: string;
-  rentalPrice: number;
-  rentalPeriod: string;
+  productId: string;
+  name?: string;
+  imageUrl?: string;
+  rentalPrice?: number;
+  rentalPeriod?: string;
   size?: string;
   color?: string;
+  quantity: number;
+  productDetails?: any; // Add this for storing fetched product details
 }
 
 interface Order {
-  orderId: string;
+  _id: string;
+  orderNumber: string;
   orderDate: Date;
-  status: 'Confirmed' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Returned';
+  status: 'Pending' | 'Confirmed' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Returned';
   items: OrderItem[];
-  subtotal: number;
-  shippingFee: number;
-  tax: number;
-  total: number;
-  deliveryAddress: string;
-  paymentMethod: string;
+  totalPrice: number;
+  Tax: number;
+  deliveryAddress?: string;
+  paymentMethod?: string;
   estimatedDelivery?: Date;
   actualDelivery?: Date;
 }
@@ -32,90 +34,64 @@ interface Order {
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule,FormsModule,HeaderComponent,],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent {
-  orders: Order[] = [
-    {
-      orderId: 'ORD-2023-45678',
-      orderDate: new Date('2023-05-15'),
-      status: 'Delivered',
-      items: [
-        {
-          productId: 1,
-          name: 'Premium Leather Jacket',
-          imageUrl: 'https://i.pinimg.com/736x/18/41/88/1841882091b80ce14746f504d7298d30.jpg',
-          rentalPrice: 29.99,
-          rentalPeriod: '1 week',
-          size: 'M',
-          color: 'Black'
-        },
-        {
-          productId: 15,
-          name: 'Designer Handbag',
-          imageUrl: 'https://i.pinimg.com/736x/c7/c8/5c/c7c85c4fb54186485cacf5b72d95009b.jpg',
-          rentalPrice: 59.99,
-          rentalPeriod: '2 weeks',
-          color: 'Black'
-        }
-      ],
-      subtotal: 89.98,
-      shippingFee: 9.99,
-      tax: 7.99,
-      total: 107.96,
-      deliveryAddress: '123 Main St, Apt 4B, New York, NY 10001',
-      paymentMethod: 'Visa ending in 4242',
-      estimatedDelivery: new Date('2023-05-18'),
-      actualDelivery: new Date('2023-05-17')
-    },
-    {
-      orderId: 'ORD-2023-35621',
-      orderDate: new Date('2023-04-28'),
-      status: 'Returned',
-      items: [
-        {
-          productId: 22,
-          name: 'Formal Watch',
-          imageUrl: 'https://i.pinimg.com/736x/c7/c8/5c/c7c85c4fb54186485cacf5b72d95009b.jpg',
-          rentalPrice: 59.99,
-          rentalPeriod: '1 week',
-          color: 'Silver'
-        }
-      ],
-      subtotal: 59.99,
-      shippingFee: 4.99,
-      tax: 5.20,
-      total: 70.18,
-      deliveryAddress: '123 Main St, Apt 4B, New York, NY 10001',
-      paymentMethod: 'Visa ending in 4242',
-      estimatedDelivery: new Date('2023-05-01'),
-      actualDelivery: new Date('2023-05-02')
-    },
-    {
-      orderId: 'ORD-2023-28945',
-      orderDate: new Date('2023-06-10'),
-      status: 'Shipped',
-      items: [
-        {
-          productId: 24,
-          name: 'Leather Backpack',
-          imageUrl: 'https://i.pinimg.com/736x/18/41/88/1841882091b80ce14746f504d7298d30.jpg',
-          rentalPrice: 49.99,
-          rentalPeriod: '2 weeks',
-          color: 'Brown'
-        }
-      ],
-      subtotal: 49.99,
-      shippingFee: 4.99,
-      tax: 4.40,
-      total: 59.38,
-      deliveryAddress: '123 Main St, Apt 4B, New York, NY 10001',
-      paymentMethod: 'Visa ending in 4242',
-      estimatedDelivery: new Date('2023-06-15')
+  orders: Order[] = [];
+  userData: any = JSON.parse(localStorage.getItem('user') || '{}');
+  defaultProfileImage = 'https://cdn.pixabay.com/photo/2012/04/15/19/13/box-34980_640.png';
+  isLoading = true;
+
+  constructor(private productService: ProductService) { }
+
+  ngOnInit() {
+    this.loadOrders();
+  }
+
+  loadOrders() {
+    this.isLoading = true;
+    this.productService.getUserOrder(this.userData._id).subscribe(
+      async (response: any[]) => {
+        this.orders = await this.enrichOrdersWithProductDetails(response);
+        this.isLoading = false;
+      },
+      (error) => {
+        console.error('Error fetching orders:', error);
+        this.isLoading = false;
+      }
+    );
+  }
+
+  async enrichOrdersWithProductDetails(orders: any[]): Promise<Order[]> {
+    const enrichedOrders = [];
+    
+    for (const order of orders) {
+      const enrichedOrder: Order = {
+        ...order,
+        orderDate: new Date(order.orderDate),
+        items: []
+      };
+
+      // Fetch product details for each item
+      const productDetails = await this.getProductById(order.productId);
+      
+      enrichedOrder.items.push({
+        productId: order.productId,
+        quantity: order.quantity,
+        size: order.size,
+        productDetails: productDetails,
+        name: productDetails?.name,
+        rentalPrice: productDetails?.price,
+        imageUrl: this.getProductImage(productDetails)
+      });
+
+      enrichedOrders.push(enrichedOrder);
     }
-  ];
+
+    return enrichedOrders;
+  }
 
   getStatusClass(status: string): string {
     switch(status) {
@@ -131,21 +107,45 @@ export class OrdersComponent {
         return 'status-cancelled';
       case 'Returned':
         return 'status-returned';
+      case 'Pending':
+        return 'status-pending';
       default:
         return '';
     }
   }
+
   getDeliveryText(order: Order): string {
     if (order.status === 'Delivered' && order.actualDelivery) {
-      return `Delivered on ${order.actualDelivery.toLocaleDateString()}`;
+      return `Delivered on ${new Date(order.actualDelivery).toLocaleDateString()}`;
     } else if (order.estimatedDelivery) {
-      return `Estimated delivery: ${order.estimatedDelivery.toLocaleDateString()}`;
+      return `Estimated delivery: ${new Date(order.estimatedDelivery).toLocaleDateString()}`;
     }
     return '';
   }
-  
 
   trackByOrderId(index: number, order: Order): string {
-    return order.orderId;
+    return order._id;
   }
+
+  getProductImage(product: any): string {
+    if (product?.image) {
+      if (product.image.startsWith('http')) {
+        return product.image;
+      }
+      return `http://localhost:3000/uploads/${product.image.split('/').pop()}`;
+    }
+    return this.defaultProfileImage;
+  }
+
+  private async getProductById(id: string): Promise<any> {
+    try {
+      const product = await this.productService.getProductById(id).toPromise();
+      return product || {};
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+      return {};
+    }
+  }
+
+  
 }

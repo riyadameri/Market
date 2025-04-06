@@ -39,7 +39,8 @@ export const routes: Routes = [
             {path : 'cart',component :CartComponent},
             {path: 'add-product',component:AddProductComponent},
             {path : 'stock',component:SupplierStockComponent},
-            {path: '',component:SupplierStockComponent}
+            {path: '',component:SupplierStockComponent},
+            {path:'orders/:id',component:OrdersComponent}
         ]
     },
 

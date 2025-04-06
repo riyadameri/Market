@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 
@@ -8,12 +8,13 @@ interface LoginResponse {
   message: string;
   user?: any;
   status?: string;
+  token?: string;
 }
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule], // Removed duplicate FormsModule
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -25,16 +26,21 @@ export class LoginComponent {
 
   loggedInUser: any = null;
 
-  constructor(private AuthService: AuthService) { }
+  constructor(private AuthService: AuthService, private router: Router) { }
 
   login() {
     console.log('Login data:', this.userLoginFormData);
     this.AuthService.login(this.userLoginFormData.email, this.userLoginFormData.password).subscribe({
       next: (response: LoginResponse) => {
-        if (response.user) { // Check for user instead of status
+        localStorage.setItem('token', response.token || '');
+        
+        if (response.user) {
           this.loggedInUser = response.user;
-          alert('Login successful');
+          localStorage.setItem('user', JSON.stringify(response.user));
           console.log('User data:', this.loggedInUser);
+
+          // Navigate to /home after successful login
+          this.router.navigate(['/home']);
         } else {
           alert('Login failed: ' + (response.message || 'Unknown error'));
         }
