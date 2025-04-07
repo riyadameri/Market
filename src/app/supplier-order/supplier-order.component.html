@@ -1,0 +1,112 @@
+<div class="order-container">
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading order details...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button (click)="loadOrderData()">Retry</button>
+  </div>
+
+  <div *ngIf="orderData && !isLoading" class="order-details">
+    <div class="header">
+      <h2>Order #{{ orderData.orderDetails.orderNumber }}</h2>
+      <p class="status-badge" [ngClass]="getStatusClass(orderData.orderDetails.currentStatus)">
+        {{ orderData.orderDetails.currentStatus }}
+      </p>
+    </div>
+
+    <div class="order-info">
+      <div class="section">
+        <h3>Product Details</h3>
+        <div class="product-card">
+          <img [src]="getProductImage(orderData.productDetails)" 
+               (error)="handleImageError($event)">
+          <div class="product-info">
+            <h4>{{ orderData.productDetails.name }}</h4>
+            <p>{{ orderData.productDetails.description }}</p>
+            <p>Price: {{ orderData.productDetails.price | currency }}</p>
+            <p>Size: {{ orderData.orderDetails.size }}</p>
+            <p>Quantity: {{ orderData.orderDetails.quantity }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Buyer Information</h3>
+        <div class="buyer-info">
+          <img *ngIf="orderData.buyerDetails.profileImage" 
+               [src]="getProfileImage(orderData.buyerDetails)" 
+               alt="Buyer Profile" 
+               class="profile-image"
+               (error)="handleProfileImageError($event)">
+          <div>
+            <p>{{ orderData.buyerDetails.firstName }} {{ orderData.buyerDetails.lastName }}</p>
+            <p>Email: {{ orderData.buyerDetails.email }}</p>
+            <p>Phone: {{ orderData.buyerDetails.phone }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Order Summary</h3>
+        <div class="summary">
+          <p>Order Date: {{ orderData.orderDetails.orderDate | date:'medium' }}</p>
+          <p>Subtotal: {{ orderData.orderDetails.totalPrice | currency }}</p>
+          <p>Tax: {{ orderData.orderDetails.tax | currency }}</p>
+          <p class="total">Total: {{ orderData.orderDetails.totalPrice + orderData.orderDetails.tax | currency }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button *ngIf="orderData.orderDetails.currentStatus === 'Pending'" 
+              (click)="confirmOrder()" 
+              class="btn confirm-btn">
+        Confirm Order
+      </button>
+      
+      <button *ngIf="orderData.orderDetails.currentStatus === 'Pending'" 
+              (click)="rejectOrder()" 
+              class="btn reject-btn">
+        Reject Order
+      </button>
+
+      <button *ngIf="orderData.orderDetails.currentStatus === 'Confirmed'" 
+              (click)="ShippedOrder()" 
+              class="btn ship-btn">
+        Ship Order
+      </button>
+
+      <button *ngIf="orderData.orderDetails.currentStatus === 'Shipped'" 
+              (click)="DeliveredOrder()" 
+              class="btn deliver-btn">
+        Deliver Order
+      </button>
+
+      <button *ngIf="orderData.orderDetails.currentStatus === 'Delivered'" 
+              (click)="completeOrder()" 
+              class="btn complete-btn">
+        Complete Order
+      </button>
+
+      <button *ngIf="orderData.orderDetails.currentStatus === 'Delivered'" 
+              (click)="ReturnedOrder()" 
+              class="btn return-btn">
+        Mark as Returned
+      </button>
+    </div>
+
+    <div class="status-history" *ngIf="orderData.orderDetails.statusHistory.length > 0">
+      <h3>Status History</h3>
+      <ul>
+        <li *ngFor="let status of orderData.orderDetails.statusHistory">
+          <span class="status-badge" [ngClass]="getStatusClass(status.status)">
+            {{ status.status }}
+          </span>
+          <span class="status-date">{{ status.date | date:'medium' }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

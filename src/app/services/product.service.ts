@@ -52,7 +52,26 @@ getSupplierOrders(supplierId: string): Observable<any> {
 }
 
 
+//get orderDetails  productDetails buyerDetails sellerDetails
+AllOrderData(id: string){
+  return this.http.get(`${this.apiUrl}/AllOrderData/${id}`)
+}
+
+// In your product.service.ts
+updateOrderStatus(orderId: string, status: string) {
+  return this.http.patch(`${this.apiUrl}/orders/${orderId}`, { status });
+}
+deleteProduct(id:string){
+  return this.http.delete(`${this.apiUrl}/product/remove/${id}`)
+}
+// Add this method to your ProductService class
+changeOrderStatus(orderId: string, status: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/order/confirm/${orderId}`, { status });
+}
 
 
+removeOrder(orderId: string): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/order/remove/${orderId}`);
+ }
 
 }

@@ -3,16 +3,42 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../services/product.service';
-// Removed unused import
 import { UserService } from '../services/user.service';
-// Removed unused import
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
+
 @Component({
   selector: 'app-stock',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './stock.component.html',
   styleUrls: ['./stock.component.css'],
-
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('listAnimation', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateX(-20px)' }),
+          stagger('100ms', [
+            animate('300ms ease-out', style({ opacity: 1, transform: 'translateX(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ]),
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)' }),
+        animate('300ms ease-in-out', style({ transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({ transform: 'translateX(100%)' }))
+      ])
+    ])
+  ]
 })
 export class SupplierStockComponent implements OnInit {
   currentTab: string = 'inventory';
@@ -28,23 +54,55 @@ export class SupplierStockComponent implements OnInit {
   inventory: any[] = [];
   orders: any[] = [];
   userId: string = '';
-  isLoading = true ;
+  isLoading = true;
+  defaultProfileImage = 'https://cdn.pixabay.com/photo/2012/04/15/19/13/box-34980_640.png';
+  setCurrentTab(tab: string) {
+    if (this.currentTab !== tab) {
+      this.currentTab = tab;
+      this.loadDataForCurrentTab();
+    }
+  }
+  
+  loadDataForCurrentTab() {
+    if (this.currentTab === 'inventory') {
+      this.loadProducts();
+    } else if (this.currentTab === 'orders') {
+      this.loadOrders();
+    }
+    // Add other tabs if needed
+  }
+  
+  wilayas = [
+    "Tougourt","Adrar", "Chlef", "Laghouat", "Oum El Bouaghi", "Batna", "Béjaïa", "Biskra",
+    "Béchar", "Blida", "Bouira", "Tamanrasset", "Tébessa", "Tlemcen", "Tiaret",
+    "Tizi Ouzou", "Algiers", "Djelfa", "Jijel", "Sétif", "Saïda", "Skikda",
+    "Sidi Bel Abbès", "Annaba", "Guelma", "Constantine", "Médéa", "Mostaganem",
+    "M'Sila", "Mascara", "Ouargla", "Oran", "El Bayadh", "Illizi", "Bordj Bou Arréridj",
+    "Boumerdès", "El Tarf", "Tindouf", "Tissemsilt", "El Oued", "Khenchela",
+    "Souk Ahras", "Tipaza", "Mila", "Aïn Defla", "Naâma", "Aïn Témouchent",
+    "Ghardaïa", "Relizane"
+  ];
 
   constructor(
     private productService: ProductService,
-    private UserService : UserService,
+    private userService: UserService,
     private router: Router
-
   ) {}
-  defaultProfileImage = 'https://cdn.pixabay.com/photo/2012/04/15/19/13/box-34980_640.png';
 
   ngOnInit() {
     this.userId = JSON.parse(localStorage.getItem('user') || '{}')._id;
     this.loadProducts();
     this.loadOrders();
+    this.loadDataForCurrentTab(); // Load initial data
+  
+  }
+
+  windowReload() {
+    window.location.reload();
   }
 
   loadProducts() {
+    this.isLoading = true;
     this.productService.getProductbyUserId(this.userId).subscribe({
       next: (products) => {
         this.inventory = products.map((product: any) => ({
@@ -61,32 +119,38 @@ export class SupplierStockComponent implements OnInit {
           image: product.image,
         }));
         this.calculateStockCounts();
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading products:', err);
+        this.isLoading = false;
       }
     });
   }
 
   loadOrders() {
+    this.isLoading = true;
     this.productService.getSupplierOrders(this.userId).subscribe({
       next: (orders) => {
-        this.orders = orders.map((order: any) => {
-          // Create basic order object
+        const sortedOrders = orders.sort((a: any, b: any) => {
+          return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
+        });
+  
+        this.orders = sortedOrders.map((order: any) => {
           const orderObj: any = {
             _id: order._id,
             orderNumber: order.orderNumber,
-            productId: order.productId, // This is just the ID string
-            productName: 'Loading...', // Temporary placeholder
+            productId: order.productId,
+            productName: 'Loading...',
             quantity: order.quantity,
             customer: order.userPhone,
             orderDate: new Date(order.orderDate).toLocaleDateString(),
             status: order.status,
             totalPrice: order.totalPrice,
-            size: order.size
+            size: order.size,
+            _orderDate: new Date(order.orderDate)
           };
   
-          // Fetch product details for each order
           if (order.productId) {
             this.productService.getProductById(order.productId).subscribe({
               next: (product) => {
@@ -100,21 +164,13 @@ export class SupplierStockComponent implements OnInit {
   
           return orderObj;
         });
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading orders:', err);
+        this.isLoading = false;
       }
     });
-  }
-  // Helper method to fetch product details
-  async fetchProductDetails(productId: string): Promise<string> {
-    try {
-      const product = await this.productService.getProductById(productId).toPromise();
-      return product?.name || 'Unknown Product';
-    } catch (error) {
-      console.error('Error fetching product details:', error);
-      return 'Unknown Product';
-    }
   }
 
   getStockStatus(stock: number): string {
@@ -172,16 +228,15 @@ export class SupplierStockComponent implements OnInit {
   }
 
   getOrderStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'shipped': return 'status-shipped';
-      case 'processing': return 'status-processing';
-      case 'pending': return 'status-pending';
-      case 'delivered': return 'status-delivered';
-      default: return 'status-cancelled';
-    }
+    return 'status-' + status.toLowerCase().replace(' ', '-');
   }
 
   getInventoryValue(): number {
+
+    // load the page fist
+
+    this.router.navigate(['/stock']);
+
     return this.inventory.reduce((total, item) => total + (item.currentStock * item.cost), 0);
   }
 
@@ -203,19 +258,39 @@ export class SupplierStockComponent implements OnInit {
     return `http://localhost:3000/uploads/${imagePath}`;
   }
 
-
-  getUserData(id:string){
-    return this.UserService.getUserDataById(id)
+  getUserData(id: string) {
+    return this.userService.getUserDataById(id);
   }
 
-  getProductData(id:string){
-    return this.productService.getProductById(id)
+  getProductData(id: string) {
+    return this.productService.getProductById(id);
   }
 
-  updateOrderStatus(id: string, ac : string){
-
+  updateOrderStatus(id: string, status: string) {
+    this.productService.updateOrderStatus(id, status).subscribe({
+      next: () => {
+        const order = this.orders.find(o => o._id === id);
+        if (order) {
+          order.status = status;
+        }
+      },
+      error: (err) => {
+        console.error('Error updating order status:', err);
+      }
+    });
   }
 
-  
-
+  removeOrder(event: Event, id: string) {
+    event.stopPropagation(); // Prevent row click event
+    if (confirm('Are you sure you want to remove this order?')) {
+      this.productService.removeOrder(id).subscribe({
+        next: () => {
+          this.orders = this.orders.filter(order => order._id !== id);
+        },
+        error: (err) => {
+          console.error('Error removing order:', err);
+        }
+      });
+    }
+  }
 }

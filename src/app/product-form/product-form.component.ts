@@ -15,9 +15,51 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class AddProductComponent {
   @Output() productSubmit = new EventEmitter<FormData>();
-  
+
+  wilayas = [
+    "Tougourt","Adrar", "Chlef", "Laghouat", "Oum El Bouaghi", "Batna", "Béjaïa", "Biskra",
+    "Béchar", "Blida", "Bouira", "Tamanrasset", "Tébessa", "Tlemcen", "Tiaret",
+    "Tizi Ouzou", "Algiers", "Djelfa", "Jijel", "Sétif", "Saïda", "Skikda",
+    "Sidi Bel Abbès", "Annaba", "Guelma", "Constantine", "Médéa", "Mostaganem",
+    "M'Sila", "Mascara", "Ouargla", "Oran", "El Bayadh", "Illizi", "Bordj Bou Arréridj",
+    "Boumerdès", "El Tarf", "Tindouf", "Tissemsilt", "El Oued", "Khenchela",
+    "Souk Ahras", "Tipaza", "Mila", "Aïn Defla", "Naâma", "Aïn Témouchent",
+    "Ghardaïa", "Relizane"
+  ];
+
   productForm: FormGroup;
-  categories = ['Outerwear', 'Apparel', 'Electronics', 'Footwear', 'Accessories'];
+
+  categories = [
+    "اكسيسوار",
+    "بلوزة",
+    'قفطان',        // Caftan
+    'قبايلي',       // Kabyle (traditional Amazigh dress)
+    'كاراكو',       // Karakou
+    'بلوزة وهرانية', // Oran-style blouse
+    'جبة قسنطينية', // Constantine Jebba
+    'الشدة التلمسانية', // Tlemcen traditional bridal attire
+    'شاشية',        // Traditional cap
+    'سروال شلقة',    // Loose traditional trousers
+    'غوب بلونش',    // White dress
+    'كوستيم',       // Costume or suit
+    'اكسيسوار',     // Accessories
+    'برنوس',        // Burnous (cloak)
+    'ملاية',        // M'laya (traditional black veil)
+    'دراعة',        // Darra'a (men's traditional robe)
+    'فستان عصري تقليدي', // Modern traditional dress
+    'فستان عصري كلاسيكي', // Classic modern dress
+    'سيرات',
+    'درجات'
+  ];
+
+  // Add this in your component class (near where categories, sizeOptions, etc. are defined)
+colorOptions = [
+  "Red", "Blue", "Green", "Yellow", "Black", "White", 
+  "Gray", "Pink", "Purple", "Orange", "Brown", "Beige",
+  "Gold", "Silver", "Navy", "Teal", "Maroon", "Olive"
+];
+  
+
   sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   rentalPeriodOptions = ['3 days', '1 week', '2 weeks', '1 month'];
   imagePreview: string | ArrayBuffer | null = null;
@@ -32,14 +74,14 @@ export class AddProductComponent {
   ) {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.maxLength(500)]],
+      description: ['', [Validators.required, Validators.maxLength(1500)]],
       price: ['', [Validators.required, Validators.min(0)]],
       originalPrice: ['', [Validators.required, Validators.min(0)]],
       rentalPrice: ['', [Validators.required, Validators.min(0)]],
       imageFile: [null, Validators.required],
       category: ['', Validators.required],
       stock: ['', [Validators.required, Validators.min(0)]],
-      regions: [''], // Added regions field
+      regions: ['', Validators.required], // بدلاً من regions
       brand: this.fb.group({
         name: ['', Validators.required],
         logoFile: [null, Validators.required] // Made brand logo required
@@ -104,8 +146,8 @@ export class AddProductComponent {
     this.brandLogoPreview = null;
   }
 
-  addColor(color: string = '') {
-    this.colors.push(this.fb.control(color, Validators.required));
+  addColor() {
+    this.colors.push(this.fb.control('', Validators.required)); // Empty by default
   }
 
   removeColor(index: number) {

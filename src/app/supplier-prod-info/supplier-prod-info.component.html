@@ -1,0 +1,81 @@
+<div class="product-detail-container">
+    <div class="product-header">
+        <h1 class="page-title">Product Details</h1>
+        <div class="action-buttons">
+
+            <button class="btn remove-btn" (click)="openConfirmDialog()">
+                <i class="fas fa-trash"></i> Remove
+            </button>
+            
+        </div>
+    </div>
+    <div class="confirmation-dialog-overlay" *ngIf="showConfirmDialog">
+        <div class="confirmation-dialog">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete "{{product.name}}"? This action cannot be undone.</p>
+            <div class="dialog-actions">
+                <button class="btn cancel-btn" (click)="closeConfirmDialog()">Cancel</button>
+                <button class="btn confirm-btn" (click)="confirmRemove()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="product-card">
+        <div class="product-images">
+            <div class="main-image">
+                <img [src]="`http://localhost:3000/uploads/${product.image}`" alt="Main product image" class="product-img">
+            </div>
+            <div class="brand-logo">
+                <img [src]="`http://localhost:3000/uploads/${product.brandLogo}`" alt="Brand logo" class="logo-img">
+            </div>
+        </div>
+
+        <div class="product-info">
+            <h1 class="product-name">{{product.name}}</h1>
+            <p class="product-description">{{product.description}}</p>
+            
+            <div class="price-section">
+                <div class="price-row">
+                    <span class="price-label">Original Price:</span>
+                    <span class="original-price">${{product.originalPrice}}</span>
+                </div>
+                <div class="price-row">
+                    <span class="price-label">Selling Price:</span>
+                    <span class="selling-price">${{product.price}}</span>
+                </div>
+                <div class="price-row">
+                    <span class="price-label">Rental Price:</span>
+                    <span class="rental-price">${{product.rentalPrice}}/day</span>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <div class="detail-item">
+                    <span class="detail-label">Available Stock:</span>
+                    <span class="detail-value">{{product.stock}} units</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Colors:</span>
+                    <div class="color-chips">
+                        <span class="color-chip" *ngFor="let color of product.colors" [style.background-color]="color.toLowerCase()"></span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Sizes:</span>
+                    <div class="size-chips">
+                        <span class="size-chip" *ngFor="let size of product.sizes">{{size}}</span>
+                    </div>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Rental Periods:</span>
+                    <div class="rental-chips">
+                        <span class="rental-chip" *ngFor="let period of product.rentalPeriods">{{period}} days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

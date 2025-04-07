@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const bcrypt = require('bcryptjs');
+
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -110,4 +111,4 @@ userSchema.pre('save', async function(next) {
     }
 });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

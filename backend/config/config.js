@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
+dotenv.config();
 console.log('Initializing database connection...');
 
 const db = process.env.DB_URL;
@@ -20,4 +21,4 @@ const connectToDatabase = async () => {
 
 connectToDatabase();
 
-module.exports = mongoose;
+export default mongoose; ;

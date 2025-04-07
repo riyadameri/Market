@@ -1,17 +1,16 @@
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import path from 'path';
+import rateLimit from 'express-rate-limit';
+import { v4 as uuidv4 } from 'uuid';
+import nodemailer from 'nodemailer';
+import sanitizeHtml from 'sanitize-html';
+import validator from 'validator';
+import User from '../models/user.js';
+
 const router = express.Router();
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const multer = require('multer');
-const path = require('path');
-const rateLimit = require('express-rate-limit');
-const { v4: uuidv4 } = require('uuid');
-const nodemailer = require('nodemailer');
-const sanitizeHtml = require('sanitize-html');
-const validator = require('validator');
-
-
 
 // Rate limiting configuration
 const apiLimiter = rateLimit({
@@ -117,11 +116,10 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-router.post('/register', apiLimiter, upload.fields([
+router.post('/register', upload.fields([
   { name: 'profileImage', maxCount: 1 },
   { name: 'shopImage', maxCount: 1 }
 ]), async (req, res) => {
-
   try {
     // Sanitize and validate inputs
     const {
@@ -339,7 +337,7 @@ router.post('/verify', apiLimiter, async (req, res) => {
  * @desc    Login user
  * @access  Public
  */
-router.post('/login', apiLimiter, async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -383,7 +381,6 @@ router.post('/login', apiLimiter, async (req, res) => {
         }
       });
     }
-
 
     const token = generateToken(user);
 
@@ -661,7 +658,6 @@ router.delete('/remove-subscription/:sellerId', apiLimiter, authMiddleware, asyn
   }
 });
 
-
 // Get user data by ID
 router.get('/get/:id', async (req, res) => {
   try {
@@ -676,7 +672,6 @@ router.get('/get/:id', async (req, res) => {
   }
 });
 
-
 router.get('/get/userName/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('firstName lastName');
@@ -690,5 +685,4 @@ router.get('/get/userName/:id', async (req, res) => {
   }
 });
 
-
-module.exports = router;
+export default router;

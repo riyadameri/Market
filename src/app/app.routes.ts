@@ -15,6 +15,9 @@ import { SettingsComponent } from './settings/settings.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { NgModule } from '@angular/core';
 import { SupplierStockComponent } from './stock/stock.component';
+import { SupplierProdInfoComponent } from './supplier-prod-info/supplier-prod-info.component';
+import { EditProductDataComponent } from './edit-product-data/edit-product-data.component';
+import { SupplierOrderComponent } from './supplier-order/supplier-order.component';
 
 
 export const routes: Routes = [
@@ -40,7 +43,10 @@ export const routes: Routes = [
             {path: 'add-product',component:AddProductComponent},
             {path : 'stock',component:SupplierStockComponent},
             {path: '',component:SupplierStockComponent},
-            {path:'orders/:id',component:OrdersComponent}
+            {path:'orders/:id',component:SupplierOrderComponent},
+            { path: 'product/:id', component: SupplierProdInfoComponent },
+            {path:'product/edit/:id',component:EditProductDataComponent},
+            
         ]
     },
 
